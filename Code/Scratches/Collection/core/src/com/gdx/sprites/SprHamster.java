@@ -1,4 +1,4 @@
-package com.gdx.scratches;
+package com.gdx.sprites;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -14,21 +14,30 @@ public class SprHamster extends Sprite {
         setSize(nW, nH);
     }
 
-    public void Movement(Sprite spr1, int nNum1) {
-        int nHamVorH;
-        nHamVorH = nNum1 % 2;
-        if (nHamVorH == 0) {
-            nDx = SprGhost.horizontal(nNum1, nDx);
+    public void Movement(int nHamDir) {
+        if (nHamDir == 1) {
+            nDy = 2;
+            nDx = 0;
+        } else if (nHamDir == 2) {
+            nDx = 2;
+            nDy = 0;
+        } else if (nHamDir == 3) {
+            nDy = -2;
+            nDx = 0;
+        } else if (nHamDir == 4) {
+            nDx = -2;
             nDy = 0;
         } else {
-            nDy = SprGhost.vertical(nNum1, nDy);
             nDx = 0;
+            nDy = 0;
         }
-        spr1.setX(spr1.getX() + nDx);
-        spr1.setY(spr1.getY() + nDy);
+
+        setX(getX() + nDx);
+        setY(getY() + nDy);
     }
-        public void OOB(Sprite spr1) {
-        spr1.setX(spr1.getX() - nDx);
-        spr1.setY(spr1.getY() - nDy);
+
+    public void OOB() {
+        setX(getX() - nDx);
+        setY(getY() - nDy);
     }
-}
+}   

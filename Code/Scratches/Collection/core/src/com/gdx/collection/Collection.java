@@ -2,18 +2,17 @@ package com.gdx.collection;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.gdx.hamsters.GamHamsters;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import static com.gdx.scratches.SprGhost.horizontal;
-import static com.gdx.scratches.ScrMain.isOutOfBounds;
-import static com.gdx.scratches.SprGhost.vertical;
+import com.gdx.sprites.SprHamster;
+import com.gdx.sprites.SprPellet;
 
-public class ScrCollection implements Screen, InputProcessor {
+
+public class Collection implements Screen, InputProcessor {
 
     SpriteBatch batch;
     int nHamDir, nHamVorH, nHamdX, nHamdY, nI, nX, nY;
@@ -21,9 +20,9 @@ public class ScrCollection implements Screen, InputProcessor {
     OrthographicCamera ocCam;
     SprHamster sprHamster;
     SprPellet arPellets[] = new SprPellet[10];
-    GamHamsters game;
+    Collection game;
 
-    public ScrCollection(GamHamsters aThis) {
+    public Collection(Collection aThis) {
         batch = new SpriteBatch();
         sprHamster = new SprHamster(100, 100, 30, 30);
         bCollected = false;
@@ -62,13 +61,6 @@ public class ScrCollection implements Screen, InputProcessor {
             nHamDir = 4;
         }
 
-        if (nHamVorH == 0) {
-            nHamdX = horizontal(nHamDir, nHamdY);
-            nHamdY = 0;
-        } else {
-            nHamdY = vertical(nHamDir, nHamdX);
-            nHamdX = 0;
-        }
         sprHamster.setX(sprHamster.getX() + nHamdX);
         sprHamster.setY(sprHamster.getY() + nHamdY);
         bHamsterOutOfBounds = isOutOfBounds(sprHamster);
@@ -83,7 +75,6 @@ public class ScrCollection implements Screen, InputProcessor {
         for (nI = 0; nI < 10; nI++) {
             arPellets[nI].draw(batch);
             if(isHit(sprHamster, arPellets[nI])) {
-                GamHamsters.updateState(3);
                 System.out.println("Yum");
             }
         }
