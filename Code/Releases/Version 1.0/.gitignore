@@ -1,0 +1,6 @@
+/.nb-gradle/
+/core/build/
+/desktop/build/
+/core/.nb-gradle/
+.bin
+taskArtifacts/
