@@ -1,18 +1,17 @@
 package com.gdx.collection;
 
+import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.gdx.sprites.SprHamster;
 import com.gdx.sprites.SprPellet;
 
-
-public class Collection implements Screen, InputProcessor {
+public class Collection extends ApplicationAdapter implements InputProcessor {
 
     SpriteBatch batch;
     int nHamDir, nHamVorH, nHamdX, nHamdY, nI, nX, nY;
@@ -20,20 +19,14 @@ public class Collection implements Screen, InputProcessor {
     OrthographicCamera ocCam;
     SprHamster sprHamster;
     SprPellet arPellets[] = new SprPellet[10];
-    Collection game;
+    
 
-    public Collection(Collection aThis) {
+    public void create() {
         batch = new SpriteBatch();
         sprHamster = new SprHamster(100, 100, 30, 30);
         bCollected = false;
         Gdx.input.setInputProcessor(this);
         ocCam = new OrthographicCamera();
-        game = aThis;
-
-    }
-
-    @Override
-    public void show() {
         ocCam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         ocCam.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         ocCam.update();
@@ -42,12 +35,12 @@ public class Collection implements Screen, InputProcessor {
         for (nI = 0; nI < 10; nI++) {
             arPellets[nI] = new SprPellet(nX, nY);
             nX = nX + 50;
-            
+
         }
     }
 
     @Override
-    public void render(float delta) {
+    public void render() {
         Gdx.gl.glClearColor(255, 255, 255, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         nHamVorH = nHamDir % 2;
@@ -68,13 +61,13 @@ public class Collection implements Screen, InputProcessor {
             sprHamster.setX(sprHamster.getX() - nHamdX);
             sprHamster.setY(sprHamster.getY() - nHamdY);
         }
-        
+
 
         batch.begin();
         sprHamster.draw(batch);
         for (nI = 0; nI < 10; nI++) {
             arPellets[nI].draw(batch);
-            if(isHit(sprHamster, arPellets[nI])) {
+            if (isHit(sprHamster, arPellets[nI])) {
                 System.out.println("Yum");
             }
         }
@@ -94,41 +87,24 @@ public class Collection implements Screen, InputProcessor {
     }
 
     @Override
-    public void resize(int i, int i1) {
-    }
-
-    @Override
-    public void pause() {
-    }
-
-    @Override
-    public void resume() {
-    }
-
-    @Override
-    public void hide() {
-    }
-
-    @Override
     public void dispose() {
+        batch.dispose();
     }
 
     @Override
-    public boolean keyDown(int keycode) {
+    public boolean keyDown(int i) {
         return false;
-
     }
 
     @Override
-    public boolean keyUp(int keycode) {
+    public boolean keyUp(int i) {
         nHamDir = 0;
-        return false;
+        return true;
     }
 
     @Override
     public boolean keyTyped(char c) {
         return false;
-
     }
 
     @Override
@@ -139,24 +115,20 @@ public class Collection implements Screen, InputProcessor {
     @Override
     public boolean touchUp(int i, int i1, int i2, int i3) {
         return false;
-
     }
 
     @Override
     public boolean touchDragged(int i, int i1, int i2) {
         return false;
-
     }
 
     @Override
     public boolean mouseMoved(int i, int i1) {
         return false;
-
     }
 
     @Override
     public boolean scrolled(int i) {
         return false;
-
     }
 }
