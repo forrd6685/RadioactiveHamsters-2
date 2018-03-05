@@ -1,5 +1,7 @@
-package com.gdx.scratches;
+package com.gdx.screens;
 
+import com.gdx.common.SprHamster;
+import com.gdx.common.SprGhost;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.gdx.hamsters.GamHamsters;

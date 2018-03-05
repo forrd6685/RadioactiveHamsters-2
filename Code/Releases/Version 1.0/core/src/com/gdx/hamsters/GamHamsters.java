@@ -1,11 +1,11 @@
 package com.gdx.hamsters;
 
 import com.badlogic.gdx.Game;
-import com.gdx.scratches.ScrGameOver;
+import com.gdx.screens.ScrGameOver;
 import com.gdx.scratches.ScrSwitch1;
 import com.gdx.scratches.ScrSwitch2;
-import com.gdx.scratches.ScrMain;
-import com.gdx.scratches.ScrMenu;
+import com.gdx.screens.ScrMain;
+import com.gdx.screens.ScrMenu;
 
 public class GamHamsters extends Game {
 
