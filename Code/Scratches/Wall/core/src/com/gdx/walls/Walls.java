@@ -1,16 +1,20 @@
-package com.gdx.scratches;
+package com.gdx.walls;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.gdx.hamsters.GamHamsters;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.Screen;
+import com.gdx.hamsters.Container;
+import com.gdx.common.SprHamster;
+import com.gdx.common.SprGhost;
+import com.gdx.common.SprWall;
 
-public class ScrMain implements Screen, InputProcessor {
+public class Walls extends Game implements Screen, InputProcessor {
 
     SpriteBatch batch;
     int nGhostX, nGhostY, nGhostDirOld, nGhostDirNew, nGhostdX, nGhostdY, nHamDir, nHamVorH, nHamdX, nHamdY, nRanGhostMove;
@@ -18,12 +22,14 @@ public class ScrMain implements Screen, InputProcessor {
     OrthographicCamera ocCam;
     SprGhost sprGhost;
     SprHamster sprHamster;
-    GamHamsters gamHamsters;
+    SprWall sprWall;
+    Container gamHamsters;
 
-    public ScrMain(GamHamsters _gamhamsters) {
+    public Walls(Container _gamhamsters) {
         batch = new SpriteBatch();
         sprGhost = new SprGhost(275, 200, 30, 30);
         sprHamster = new SprHamster(100, 100, 30, 30);
+        sprWall = new SprWall(0, 0, 50, 500);
         nGhostdX = 0;
         nGhostdY = 0;
         bMovement = false;
@@ -54,29 +60,31 @@ public class ScrMain implements Screen, InputProcessor {
             sprHamster.Movement(nHamDir);
         }
         bGhostOOB = isOutOfBounds(sprGhost);
-        while (bGhostOOB == true) {
-            sprGhost.OOB();
-            nGhostDirOld = nGhostDirNew;
-            nGhostDirNew = sprGhost.GhostDirection(nGhostDirOld, nGhostDirNew);
-            sprGhost.Movement(nGhostDirNew);
-            bGhostOOB = isOutOfBounds(sprGhost);
+        if (bGhostOOB == true) {
+            sprGhost.OOB(nGhostDirOld, nGhostDirNew);
         }
         bHamsterOOB = isOutOfBounds(sprHamster);
         if (bHamsterOOB == true) {
             sprHamster.OOB();
         }
-        bIsHit = isHit(sprGhost, sprHamster);
-        if (bIsHit == true) {
-            gamHamsters.updateState(3);
-        }
+        gHitWall(sprGhost, sprWall);
+        hHitWall(sprHamster, sprWall);
         batch.begin();
         sprGhost.draw(batch);
         sprHamster.draw(batch);
+        sprWall.draw(batch);
         batch.end();
     }
 
-    public boolean isHit(Sprite sprGhost, Sprite spr2) {
-        return sprGhost.getBoundingRectangle().overlaps(spr2.getBoundingRectangle());
+    public void hHitWall(Sprite sprHam, Sprite sprWall) {
+        if (sprHam.getBoundingRectangle().overlaps(sprWall.getBoundingRectangle())) {
+            sprHamster.OOB();
+        }
+    }
+    public void gHitWall(Sprite sprG, Sprite sprWall) {
+        if (sprG.getBoundingRectangle().overlaps(sprWall.getBoundingRectangle())) {
+            sprGhost.OOB(nGhostDirOld, nGhostDirNew);
+        }
     }
 
     public static boolean isOutOfBounds(Sprite sprGhost) {
@@ -161,5 +169,10 @@ public class ScrMain implements Screen, InputProcessor {
     public boolean scrolled(int i) {
         return false;
 
+    }
+
+    @Override
+    public void create() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

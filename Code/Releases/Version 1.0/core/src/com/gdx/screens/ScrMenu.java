@@ -1,4 +1,4 @@
-package com.gdx.scratches;
+package com.gdx.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
