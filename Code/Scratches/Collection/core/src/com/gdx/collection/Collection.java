@@ -1,19 +1,17 @@
 package com.gdx.collection;
 
+import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.gdx.hamsters.GamHamsters;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import static com.gdx.scratches.SprGhost.horizontal;
-import static com.gdx.scratches.ScrMain.isOutOfBounds;
-import static com.gdx.scratches.SprGhost.vertical;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.gdx.sprites.SprHamster;
+import com.gdx.sprites.SprPellet;
 
-public class ScrCollection implements Screen, InputProcessor {
+public class Collection extends ApplicationAdapter implements InputProcessor {
 
     SpriteBatch batch;
     int nHamDir, nHamVorH, nHamdX, nHamdY, nI, nX, nY;
@@ -21,20 +19,14 @@ public class ScrCollection implements Screen, InputProcessor {
     OrthographicCamera ocCam;
     SprHamster sprHamster;
     SprPellet arPellets[] = new SprPellet[10];
-    GamHamsters game;
+    
 
-    public ScrCollection(GamHamsters aThis) {
+    public void create() {
         batch = new SpriteBatch();
         sprHamster = new SprHamster(100, 100, 30, 30);
         bCollected = false;
         Gdx.input.setInputProcessor(this);
         ocCam = new OrthographicCamera();
-        game = aThis;
-
-    }
-
-    @Override
-    public void show() {
         ocCam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         ocCam.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         ocCam.update();
@@ -43,12 +35,12 @@ public class ScrCollection implements Screen, InputProcessor {
         for (nI = 0; nI < 10; nI++) {
             arPellets[nI] = new SprPellet(nX, nY);
             nX = nX + 50;
-            
+
         }
     }
 
     @Override
-    public void render(float delta) {
+    public void render() {
         Gdx.gl.glClearColor(255, 255, 255, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         nHamVorH = nHamDir % 2;
@@ -61,29 +53,18 @@ public class ScrCollection implements Screen, InputProcessor {
         } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             nHamDir = 4;
         }
-
-        if (nHamVorH == 0) {
-            nHamdX = horizontal(nHamDir, nHamdY);
-            nHamdY = 0;
-        } else {
-            nHamdY = vertical(nHamDir, nHamdX);
-            nHamdX = 0;
-        }
-        sprHamster.setX(sprHamster.getX() + nHamdX);
-        sprHamster.setY(sprHamster.getY() + nHamdY);
+        sprHamster.Movement(nHamDir);
         bHamsterOutOfBounds = isOutOfBounds(sprHamster);
         if (bHamsterOutOfBounds == true) {
-            sprHamster.setX(sprHamster.getX() - nHamdX);
-            sprHamster.setY(sprHamster.getY() - nHamdY);
+            sprHamster.OOB();
         }
-        
+
 
         batch.begin();
         sprHamster.draw(batch);
         for (nI = 0; nI < 10; nI++) {
             arPellets[nI].draw(batch);
-            if(isHit(sprHamster, arPellets[nI])) {
-                GamHamsters.updateState(3);
+            if (isHit(sprHamster, arPellets[nI])) {
                 System.out.println("Yum");
             }
         }
@@ -103,41 +84,24 @@ public class ScrCollection implements Screen, InputProcessor {
     }
 
     @Override
-    public void resize(int i, int i1) {
-    }
-
-    @Override
-    public void pause() {
-    }
-
-    @Override
-    public void resume() {
-    }
-
-    @Override
-    public void hide() {
-    }
-
-    @Override
     public void dispose() {
+        batch.dispose();
     }
 
     @Override
-    public boolean keyDown(int keycode) {
+    public boolean keyDown(int i) {
         return false;
-
     }
 
     @Override
-    public boolean keyUp(int keycode) {
+    public boolean keyUp(int i) {
         nHamDir = 0;
-        return false;
+        return true;
     }
 
     @Override
     public boolean keyTyped(char c) {
         return false;
-
     }
 
     @Override
@@ -148,24 +112,20 @@ public class ScrCollection implements Screen, InputProcessor {
     @Override
     public boolean touchUp(int i, int i1, int i2, int i3) {
         return false;
-
     }
 
     @Override
     public boolean touchDragged(int i, int i1, int i2) {
         return false;
-
     }
 
     @Override
     public boolean mouseMoved(int i, int i1) {
         return false;
-
     }
 
     @Override
     public boolean scrolled(int i) {
         return false;
-
     }
 }
