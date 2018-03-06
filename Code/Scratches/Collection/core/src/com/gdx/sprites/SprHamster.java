@@ -15,6 +15,7 @@ public class SprHamster extends Sprite {
     }
 
     public void Movement(int nHamDir) {
+        
         if (nHamDir == 1) {
             nDy = 2;
             nDx = 0;

@@ -53,13 +53,10 @@ public class Collection extends ApplicationAdapter implements InputProcessor {
         } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             nHamDir = 4;
         }
-
-        sprHamster.setX(sprHamster.getX() + nHamdX);
-        sprHamster.setY(sprHamster.getY() + nHamdY);
+        sprHamster.Movement(nHamDir);
         bHamsterOutOfBounds = isOutOfBounds(sprHamster);
         if (bHamsterOutOfBounds == true) {
-            sprHamster.setX(sprHamster.getX() - nHamdX);
-            sprHamster.setY(sprHamster.getY() - nHamdY);
+            sprHamster.OOB();
         }
 
 
