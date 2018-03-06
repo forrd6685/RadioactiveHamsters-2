@@ -10,16 +10,16 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.gdx.sprites.SprHamster;
 import com.gdx.sprites.SprPellet;
+import java.util.ArrayList;
 
 public class Collection extends ApplicationAdapter implements InputProcessor {
 
     SpriteBatch batch;
-    int nHamDir, nHamVorH, nHamdX, nHamdY, nI, nX, nY;
+    int nHamDir, nHamVorH, nHamdX, nHamdY, nI, nX, nY, nPelletAmt;
     boolean bHamsterOutOfBounds, bCollected, bHit;
     OrthographicCamera ocCam;
     SprHamster sprHamster;
-    SprPellet arPellets[] = new SprPellet[10];
-    
+    ArrayList<SprPellet> Pellets = new ArrayList<SprPellet>();
 
     public void create() {
         batch = new SpriteBatch();
@@ -33,9 +33,11 @@ public class Collection extends ApplicationAdapter implements InputProcessor {
         nX = 100;
         nY = 400;
         for (nI = 0; nI < 10; nI++) {
-            arPellets[nI] = new SprPellet(nX, nY);
+            Pellets.add(new SprPellet(nX, nY));
+            // https://gamedev.stackexchange.com/questions/89985/how-to-remove-game-objects-after-on-overlap-in-libgdx-game
+            // https://beginnersbook.com/2013/12/java-arraylist/
             nX = nX + 50;
-
+            nPelletAmt++;
         }
     }
 
@@ -63,9 +65,14 @@ public class Collection extends ApplicationAdapter implements InputProcessor {
         batch.begin();
         sprHamster.draw(batch);
         for (nI = 0; nI < 10; nI++) {
-            arPellets[nI].draw(batch);
-            if (isHit(sprHamster, arPellets[nI])) {
+            for (int nJ = 0; nJ < Pellets.size; nJ++) {
+                Pellets.get(nJ).draw(batch);
+                if (isHit(sprHamster, Pellets)) {
                 System.out.println("Yum");
+                nPelletAmt--;
+                Pellets.remove(nJ);
+            }
+            
             }
         }
         batch.end();
