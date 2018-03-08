@@ -34,9 +34,6 @@ public class SprGhost extends Sprite {
     public void OOB(int nDirOld, int nDirNew) {
         setX(getX() - nDx);
         setY(getY() - nDy);
-        nDirOld = nDirNew;
-        nDirNew = GhostDirection(nDirOld, nDirNew);
-        Movement(nDirNew);
     }
 
     public int GhostDirection(int nDirNew, int nDirOld) {

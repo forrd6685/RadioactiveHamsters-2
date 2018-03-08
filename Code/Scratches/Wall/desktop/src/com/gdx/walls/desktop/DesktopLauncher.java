@@ -7,6 +7,8 @@ import com.gdx.hamsters.Container;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+                config.title = Container.TITLE;
 		new LwjglApplication(new Container(), config);
+               
 	}
 }
