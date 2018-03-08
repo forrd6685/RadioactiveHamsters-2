@@ -13,6 +13,7 @@ import com.gdx.hamsters.Container;
 import com.gdx.common.SprHamster;
 import com.gdx.common.SprGhost;
 import com.gdx.common.SprWall;
+import com.gdx.common.SprMap;
 
 public class Walls extends Game implements Screen, InputProcessor {
 
@@ -23,13 +24,15 @@ public class Walls extends Game implements Screen, InputProcessor {
     SprGhost sprGhost;
     SprHamster sprHamster;
     SprWall sprWall;
+//    SprMap sprMap;
     Container gamHamsters;
 
     public Walls(Container _gamhamsters) {
         batch = new SpriteBatch();
-        sprGhost = new SprGhost(275, 200, 30, 30);
-        sprHamster = new SprHamster(100, 100, 30, 30);
+        sprGhost = new SprGhost(275, 200, 25, 25);
+        sprHamster = new SprHamster(308, 196, 25, 25);
         sprWall = new SprWall(0, 0, 50, 500);
+//        sprMap = new SprMap();
         nGhostdX = 0;
         nGhostdY = 0;
         bMovement = false;
@@ -62,6 +65,9 @@ public class Walls extends Game implements Screen, InputProcessor {
         bGhostOOB = isOutOfBounds(sprGhost);
         if (bGhostOOB == true) {
             sprGhost.OOB(nGhostDirOld, nGhostDirNew);
+            nGhostDirOld = nGhostDirNew;
+            nGhostDirNew = sprGhost.GhostDirection(nGhostDirOld, nGhostDirNew);
+            sprGhost.Movement(nGhostDirNew);
         }
         bHamsterOOB = isOutOfBounds(sprHamster);
         if (bHamsterOOB == true) {
@@ -70,6 +76,7 @@ public class Walls extends Game implements Screen, InputProcessor {
         gHitWall(sprGhost, sprWall);
         hHitWall(sprHamster, sprWall);
         batch.begin();
+//        sprMap.draw(batch);
         sprGhost.draw(batch);
         sprHamster.draw(batch);
         sprWall.draw(batch);
@@ -81,9 +88,16 @@ public class Walls extends Game implements Screen, InputProcessor {
             sprHamster.OOB();
         }
     }
+
     public void gHitWall(Sprite sprG, Sprite sprWall) {
         if (sprG.getBoundingRectangle().overlaps(sprWall.getBoundingRectangle())) {
-            sprGhost.OOB(nGhostDirOld, nGhostDirNew);
+            bGhostOOB = true;
+            if (bGhostOOB == true) {
+                sprGhost.OOB(nGhostDirOld, nGhostDirNew);
+                nGhostDirOld = nGhostDirNew;
+                nGhostDirNew = sprGhost.GhostDirection(nGhostDirOld, nGhostDirNew);
+                sprGhost.Movement(nGhostDirNew);
+            };
         }
     }
 

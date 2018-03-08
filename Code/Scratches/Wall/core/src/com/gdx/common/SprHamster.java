@@ -37,6 +37,8 @@ public class SprHamster extends Sprite {
     }
 
     public void OOB() {
+//        setX(50 - nDx); //Looking to try and help with teleporting the character across the screen
+//        setY(getY()- nDy); //y doesn't need to change, does cause general problems with hitting other walls
         setX(getX() - nDx);
         setY(getY() - nDy);
     }

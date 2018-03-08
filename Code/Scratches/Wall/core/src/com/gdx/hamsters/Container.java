@@ -5,6 +5,8 @@ import com.gdx.walls.Walls;
 
 public class Container extends Game {
     
+    //public static final String TITLE = "Radioactive Hamsters (On the Moon!)";
+    public static final String TITLE = "Walls Test";
     Walls walls;
     int nScreen;
 
