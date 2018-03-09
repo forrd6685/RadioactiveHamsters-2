@@ -23,8 +23,7 @@ public class ScrMenu implements Screen, InputProcessor {
         Gdx.input.setInputProcessor(this);
         System.out.println("");
         System.out.println("Welcome to the Menu!");
-        System.out.println("Press 1 to see our Screen Switching Scratch.");
-        System.out.println("Press 2 to play our 'game'.");
+        System.out.println("Press ENTER to play our 'game'.");
     }
 
     @Override
@@ -56,11 +55,9 @@ public class ScrMenu implements Screen, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-        if (keycode == Input.Keys.NUM_1) {
-            gamHamster.updateState(0);
-        } else if (keycode == Input.Keys.NUM_2) {
+        if (keycode == Input.Keys.ENTER) {
             gamHamster.updateState(2);
-//        } else if ()
+//        
         }
         return false;
     }

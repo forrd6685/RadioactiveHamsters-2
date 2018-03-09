@@ -12,7 +12,6 @@ public class SprGhost extends Sprite {
         super(new Texture(Gdx.files.internal("ghost.png")));
         setSize(nW, nH);
         setPosition(nX, nY);
-//        setFlip(true, true);
     }
 
     public void Movement(int nDirNew) {

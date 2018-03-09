@@ -18,7 +18,6 @@ public class ScrMain implements Screen, InputProcessor {
 
     SpriteBatch batch;
     int nGhostX, nGhostY, nGhostDirOld, nGhostDirNew, nGhostdX, nGhostdY, nHamDir, nHamVorH, nHamdX, nHamdY, nRanGhostMove, nI, nX, nY;
-    ;
     boolean bMovement, bGhostOOB, bHamsterOOB, bGhostRanMove, bIsHit;
     OrthographicCamera ocCam;
     SprGhost sprGhost;
@@ -85,7 +84,7 @@ public class ScrMain implements Screen, InputProcessor {
         }
         bIsHit = isHit(sprGhost, sprHamster);
         if (bIsHit == true) {
-            gamHamsters.updateState(3);
+            gamHamsters.updateState(2);
         }
         batch.begin();
         sprGhost.draw(batch);

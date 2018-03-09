@@ -25,7 +25,7 @@ public class ScrWin implements Screen {
     public void render(float delta) {
         batch.begin();
         batch.draw(tExp, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch.draw(tWin, 0, 0, Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
+        batch.draw(tWin, Gdx.graphics.getWidth()/2 - 140, Gdx.graphics.getHeight()/2 - 200, 300, 300);
         batch.end();
     }
 

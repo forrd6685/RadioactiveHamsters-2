@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.gdx.scratches;
+package com.gdx.screenswitch;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -12,7 +12,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.gdx.hamsters.GamHamsters;
 
 /**
  *
@@ -23,20 +22,20 @@ public class ScrSwitch2 implements Screen, InputProcessor {
     Texture tx;
     SpriteBatch batch;
     Sprite spr;
-    GamHamsters gamHamsters;
+    ScreenSwitch screenSwitch;
 
-    public ScrSwitch2(GamHamsters _gamhamsters) {
+    public ScrSwitch2(ScreenSwitch _screenSwitch) {
         batch = new SpriteBatch();
         tx = new Texture("two.png");
         spr = new Sprite(tx);
-        gamHamsters = _gamhamsters;
+        screenSwitch = _screenSwitch;
     }
 
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        batch.draw(spr, 400, 400);
+        batch.draw(spr, 0, 0);
         batch.end();
 
     }
@@ -44,7 +43,7 @@ public class ScrSwitch2 implements Screen, InputProcessor {
     @Override
     public void show() {
         System.out.println("You switched to Screen 2!");
-        System.out.println("Press Backspace to go back to the Menu.");
+        System.out.println("Press Backspace to go back to Screen 1.");
         Gdx.input.setInputProcessor(this);
     }
 
@@ -71,7 +70,7 @@ public class ScrSwitch2 implements Screen, InputProcessor {
     @Override
     public boolean keyDown(int i) {
         if (i == Input.Keys.BACKSPACE) {
-            gamHamsters.updateState(5);
+            screenSwitch.updateState(1);
         }
         return false;
     }
