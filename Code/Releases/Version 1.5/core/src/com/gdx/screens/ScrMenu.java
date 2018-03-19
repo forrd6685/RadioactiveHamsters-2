@@ -56,7 +56,7 @@ public class ScrMenu implements Screen, InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         if (keycode == Input.Keys.ENTER) {
-            gamHamster.updateState(2);
+            gamHamster.updateState(1);
 //        
         }
         return false;
