@@ -5,6 +5,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.gdx.hamsters.GamHamsters;
 
 public class ScrMenu implements Screen, InputProcessor {
@@ -12,25 +14,27 @@ public class ScrMenu implements Screen, InputProcessor {
     String sMenu;
     GamHamsters gamHamster;
     int nScreen;
+    Texture tx;
+    SpriteBatch batch;
 
     public ScrMenu(GamHamsters _gamHamster) {
         gamHamster = _gamHamster;
-
+        batch = new SpriteBatch();
+        tx = new Texture("PressEnter.png");
     }
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(this);
-        System.out.println("");
-        System.out.println("Welcome to the Menu!");
-        System.out.println("Press ENTER to play our 'game'.");
     }
 
     @Override
     public void render(float f) {
-        Gdx.gl.glClearColor(0, 0, 0, 0);
+        Gdx.gl.glClearColor(255, 255, 255, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+        batch.begin();
+        batch.draw(tx, 100, 50);
+        batch.end();
     }
 
     @Override
