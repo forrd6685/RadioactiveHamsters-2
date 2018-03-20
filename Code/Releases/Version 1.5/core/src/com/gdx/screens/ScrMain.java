@@ -92,12 +92,10 @@ public class ScrMain implements Screen, InputProcessor {
         for (int nJ = 0; nJ < Pellets.size(); nJ++) {
             Pellets.get(nJ).draw(batch);
             if (isHit(sprHamster, Pellets.get(nJ))) {
-                System.out.println("Yum");
                 Pellets.remove(nJ);
             }
             if (Pellets.isEmpty()) {
                 gamHamsters.updateState(3);
-                System.out.println("You Win!");
             }
         }
         batch.end();
