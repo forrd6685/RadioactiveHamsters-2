@@ -66,7 +66,7 @@ public class Map extends Game implements Screen, InputProcessor {
         }
         bGhostOOB = isOutOfBounds(sprGhost);
         if (bGhostOOB == true) {
-            sprGhost.OOB(nGhostDirOld, nGhostDirNew);
+            sprGhost.OOB();
             nGhostDirOld = nGhostDirNew;
             nGhostDirNew = sprGhost.GhostDirection(nGhostDirOld, nGhostDirNew);
             sprGhost.Movement(nGhostDirNew);
@@ -106,7 +106,7 @@ public class Map extends Game implements Screen, InputProcessor {
         if (sprG.getBoundingRectangle().overlaps(sprWall.getBoundingRectangle())) {
             bGhostOOB = true;
             if (bGhostOOB == true) {
-                sprGhost.OOB(nGhostDirOld, nGhostDirNew);
+                sprGhost.OOB();
                 nGhostDirOld = nGhostDirNew;
                 nGhostDirNew = sprGhost.GhostDirection(nGhostDirOld, nGhostDirNew);
                 sprGhost.Movement(nGhostDirNew);
