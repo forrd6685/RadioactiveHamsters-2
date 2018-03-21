@@ -13,7 +13,6 @@ import com.gdx.hamsters.Container;
 import com.gdx.common.SprHamster;
 import com.gdx.common.SprGhost;
 import com.gdx.common.SprWall;
-import com.gdx.common.SprMap;
 
 public class Walls extends Game implements Screen, InputProcessor {
 
@@ -24,15 +23,13 @@ public class Walls extends Game implements Screen, InputProcessor {
     SprGhost sprGhost;
     SprHamster sprHamster;
     SprWall sprWall;
-//    SprMap sprMap;
     Container gamHamsters;
 
     public Walls(Container _gamhamsters) {
         batch = new SpriteBatch();
-        sprGhost = new SprGhost(275, 200, 25, 25);
-        sprHamster = new SprHamster(308, 196, 25, 25);
-        sprWall = new SprWall(0, 0, 50, 500);
-//        sprMap = new SprMap();
+        sprGhost = new SprGhost(100, 200, 25, 25);
+        sprHamster = new SprHamster(100, 196, 25, 25);
+        sprWall = new SprWall(200, 0, 200, 500);
         nGhostdX = 0;
         nGhostdY = 0;
         bMovement = false;
@@ -76,7 +73,6 @@ public class Walls extends Game implements Screen, InputProcessor {
         gHitWall(sprGhost, sprWall);
         hHitWall(sprHamster, sprWall);
         batch.begin();
-//        sprMap.draw(batch);
         sprGhost.draw(batch);
         sprHamster.draw(batch);
         sprWall.draw(batch);
