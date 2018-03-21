@@ -70,9 +70,14 @@ public class Collection extends ApplicationAdapter implements InputProcessor {
         for (int nJ = 0; nJ < Pellets.size(); nJ++) {
             Pellets.get(nJ).draw(batch);
             if (isHit(sprHamster, Pellets.get(nJ))) {
-                System.out.println("Yum");
+                sprHamster.fSpeed *= 1.1;
+                if (sprHamster.fSpeed >= 5) {
+                    sprHamster.fSpeed = 5;
+                }
+                System.out.println(sprHamster.fSpeed);
                 Pellets.remove(nJ);
             }
+
             if (Pellets.isEmpty()) {
                 System.out.println("You Win!");
             }
