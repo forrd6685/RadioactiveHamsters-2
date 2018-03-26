@@ -67,9 +67,7 @@ public class ScrMain implements Screen, InputProcessor {
             nGhostDirNew = sprGhost.GhostDirection(nGhostDirOld, nGhostDirNew);
         }
         sprGhost.Movement(nGhostDirNew);
-        if (bMovement = true) {
-            sprHamster.Movement(nHamDir);
-        }
+        sprHamster.Movement(nHamDir);
         bGhostOOB = isOutOfBounds(sprGhost);
         while (bGhostOOB == true) {
             sprGhost.OOB();
@@ -105,8 +103,8 @@ public class ScrMain implements Screen, InputProcessor {
         return sprGhost.getBoundingRectangle().overlaps(spr2.getBoundingRectangle());
     }
 
-    public static boolean isOutOfBounds(Sprite sprGhost) {
-        if (0 < sprGhost.getX() && sprGhost.getX() + sprGhost.getWidth() < Gdx.graphics.getWidth() && 0 < sprGhost.getY() && sprGhost.getY() + sprGhost.getHeight() < Gdx.graphics.getHeight()) {
+    public static boolean isOutOfBounds(Sprite spr) {
+        if (0 < spr.getX() && spr.getX() + spr.getWidth() < Gdx.graphics.getWidth() && 0 < spr.getY() && spr.getY() + spr.getHeight() < Gdx.graphics.getHeight()) {
             return false;
         } else {
             return true;

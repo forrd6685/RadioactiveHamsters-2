@@ -40,6 +40,6 @@ public class SprGhost extends Sprite {
             nDirNew = (int) (Math.random() * 4 + 1);
         }
         return nDirNew;
-        
+
     }
 }
