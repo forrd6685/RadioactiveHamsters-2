@@ -1,4 +1,4 @@
-package com.gdx.walls;
+package com.gdx.map;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -13,29 +13,33 @@ import com.gdx.hamsters.Container;
 import com.gdx.common.SprHamster;
 import com.gdx.common.SprGhost;
 import com.gdx.common.SprWall;
+import com.gdx.common.SprMap;
 
-public class Walls extends Game implements Screen, InputProcessor {
+public class Map extends Game implements Screen, InputProcessor {
 
     SpriteBatch batch;
-    int nGhostX, nGhostY, nGhostDirOld, nGhostDirNew, nGhostdX, nGhostdY, nHamDir, nHamVorH, nHamdX, nHamdY, nRanGhostMove;
-    boolean bMovement, bGhostOOB, bHamsterOOB, bGhostRanMove, bIsHit;
+    int nGhostX, nGhostY, nGhostDirOld, nGhostDirNew, nGhostdX, nGhostdY, nHamDir, nHamVorH, nHamdX, nHamdY, nRanGhostMove, nI, nWallX1, nWallY1, nWallX2, nWallY2;
+    boolean bMovement, bGhostOOB, bHamsterOOB, bGhostRanMove, bHit;
     OrthographicCamera ocCam;
     SprGhost sprGhost;
     SprHamster sprHamster;
-    SprWall sprWall;
+    SprMap sprMap;
     Container gamHamsters;
+    SprWall sprWally[];
+    int nX1, nY1, nX2, nY2, nWidth, nHeight;
 
-    public Walls(Container _gamhamsters) {
+    public Map(Container _gamhamsters) {
         batch = new SpriteBatch();
-        sprGhost = new SprGhost(100, 200, 25, 25);
-        sprHamster = new SprHamster(100, 196, 25, 25);
-        sprWall = new SprWall(200, 0, 200, 500);
+        sprGhost = new SprGhost(275, 200, 25, 25);
+        sprHamster = new SprHamster(308, 196, 25, 25);
+        sprMap = new SprMap();
         nGhostdX = 0;
         nGhostdY = 0;
         bMovement = false;
-        bIsHit = false;
+        bHit = false;
         ocCam = new OrthographicCamera();
         gamHamsters = _gamhamsters;
+        sprWally = new SprWall[14];
     }
 
     @Override
@@ -43,6 +47,7 @@ public class Walls extends Game implements Screen, InputProcessor {
         ocCam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         ocCam.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         ocCam.update();
+        sprMap.Walls(sprWally);
         Gdx.input.setInputProcessor(this);
     }
 
@@ -61,7 +66,7 @@ public class Walls extends Game implements Screen, InputProcessor {
         }
         bGhostOOB = isOutOfBounds(sprGhost);
         if (bGhostOOB == true) {
-            sprGhost.OOB(nGhostDirOld, nGhostDirNew);
+            sprGhost.OOB();
             nGhostDirOld = nGhostDirNew;
             nGhostDirNew = sprGhost.GhostDirection(nGhostDirOld, nGhostDirNew);
             sprGhost.Movement(nGhostDirNew);
@@ -70,26 +75,38 @@ public class Walls extends Game implements Screen, InputProcessor {
         if (bHamsterOOB == true) {
             sprHamster.OOB();
         }
-        gHitWall(sprGhost, sprWall);
-        hHitWall(sprHamster, sprWall);
+        for (nI = 0; nI < sprWally.length; nI++) {
+            gHitWall(sprGhost, sprWally[nI]);
+        }
+        for (nI = 0; nI < sprWally.length; nI++) {
+            bHit = hHitWall(sprHamster, sprWally[nI]);
+            if (bHit == true) {
+                System.out.println("Hit Wall: " + nI);
+            }
+        }
         batch.begin();
         sprGhost.draw(batch);
         sprHamster.draw(batch);
-        sprWall.draw(batch);
+        sprMap.draw(batch);       
+        for (nI = 0; nI < sprWally.length; nI++) {
+            sprWally[nI].draw(batch);
+        }
         batch.end();
     }
 
-    public void hHitWall(Sprite sprHam, Sprite sprWall) {
+    public boolean hHitWall(Sprite sprHam, Sprite sprWall) {
         if (sprHam.getBoundingRectangle().overlaps(sprWall.getBoundingRectangle())) {
             sprHamster.OOB();
+            return true;
         }
+        return false;
     }
 
     public void gHitWall(Sprite sprG, Sprite sprWall) {
         if (sprG.getBoundingRectangle().overlaps(sprWall.getBoundingRectangle())) {
             bGhostOOB = true;
             if (bGhostOOB == true) {
-                sprGhost.OOB(nGhostDirOld, nGhostDirNew);
+                sprGhost.OOB();
                 nGhostDirOld = nGhostDirNew;
                 nGhostDirNew = sprGhost.GhostDirection(nGhostDirOld, nGhostDirNew);
                 sprGhost.Movement(nGhostDirNew);
@@ -153,14 +170,35 @@ public class Walls extends Game implements Screen, InputProcessor {
     }
 
     @Override
-    public boolean touchDown(int i, int i1, int i2, int i3) {
+    public boolean touchDown(int nScreenX, int nScreenY, int pointer, int button) {
+        if (button == Input.Buttons.LEFT) {
+            nX1 = nScreenX;
+            nY1 = Gdx.graphics.getHeight() - nScreenY;
+        }
         return false;
     }
 
     @Override
-    public boolean touchUp(int i, int i1, int i2, int i3) {
+    public boolean touchUp(int nScreenX, int nScreenY, int pointer, int button) {
+        if (button == Input.Buttons.LEFT) {
+            int nXPos, nYPos;
+            nX2 = nScreenX;
+            nY2 = Gdx.graphics.getHeight() - nScreenY;
+            nWidth = Math.abs(nX1 - nX2);
+            nHeight = Math.abs(nY1 - nY2);
+            if(nX1 < nX2) {
+               nXPos = nX1; 
+            } else {
+               nXPos = nX2; 
+            }
+            if(nY1 < nY2) {
+               nYPos = nY1; 
+            } else {
+               nYPos = nY2; 
+            }
+            System.out.println("sprWall[] = new SprWall("+nXPos+", "+nYPos+", "+nWidth+", "+nHeight+");");
+        }
         return false;
-
     }
 
     @Override
@@ -183,6 +221,5 @@ public class Walls extends Game implements Screen, InputProcessor {
 
     @Override
     public void create() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
