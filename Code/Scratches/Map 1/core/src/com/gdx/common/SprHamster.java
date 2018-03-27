@@ -31,7 +31,6 @@ public class SprHamster extends Sprite {
             nDx = 0;
             nDy = 0;
         }
-
         setX(getX() + nDx);
         setY(getY() + nDy);
     }
