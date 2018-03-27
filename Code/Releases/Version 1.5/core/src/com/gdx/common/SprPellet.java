@@ -18,4 +18,6 @@ public class SprPellet extends Sprite {
         setPosition(nX, nY);
         setSize(10, 10);        
     }
-}
+     
+  }
+
