@@ -3,6 +3,7 @@ package com.gdx.common;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
 
 public class SprGhost extends Sprite {
 
@@ -38,7 +39,7 @@ public class SprGhost extends Sprite {
 
     public int GhostDirection(int nDirNew, int nDirOld) {
         while (nDirNew == nDirOld) {
-            nDirNew = (int) (Math.random() * 4 + 1);
+            nDirNew = (int) (MathUtils.random() * 4 + 1);
         }
         return nDirNew;
 
