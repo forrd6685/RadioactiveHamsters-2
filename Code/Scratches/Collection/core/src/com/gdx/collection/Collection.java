@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.gdx.sprites.SprHamster;
 import com.gdx.sprites.SprPellet;
+
 import java.util.ArrayList;
 
 public class Collection extends ApplicationAdapter implements InputProcessor {
@@ -70,76 +71,77 @@ public class Collection extends ApplicationAdapter implements InputProcessor {
         for (int nJ = 0; nJ < Pellets.size(); nJ++) {
             Pellets.get(nJ).draw(batch);
             if (isHit(sprHamster, Pellets.get(nJ))) {
-                sprHamster.fSpeed *= 1.1;
-                if (sprHamster.fSpeed >= 5) {
-                    sprHamster.fSpeed = 5;
-                }
-                System.out.println(sprHamster.fSpeed);
+                // sprHamster.fSpeed *= 1.1;
+                //if (sprHamster.fSpeed >= 5) {
+                //  sprHamster.fSpeed = 5;
                 Pellets.remove(nJ);
             }
+            //System.out.println(sprHamster.fSpeed);
 
-            if (Pellets.isEmpty()) {
-                System.out.println("You Win!");
-            }
+        }
+
+        if (Pellets.isEmpty()) {
+            System.out.println("You Win!");
         }
         batch.end();
     }
 
-    public boolean isHit(Sprite spr1, Sprite spr2) {
+
+public boolean isHit(Sprite spr1,Sprite spr2){
         return spr1.getBoundingRectangle().overlaps(spr2.getBoundingRectangle());
-    }
-
-    public static boolean isOutOfBounds(Sprite spr1) {
-        if (0 < spr1.getX() && spr1.getX() + spr1.getWidth() < Gdx.graphics.getWidth() && 0 < spr1.getY() && spr1.getY() + spr1.getHeight() < Gdx.graphics.getHeight()) {
-            return false;
-        } else {
-            return true;
         }
-    }
 
-    @Override
-    public void dispose() {
-        batch.dispose();
-    }
-
-    @Override
-    public boolean keyDown(int i) {
+public static boolean isOutOfBounds(Sprite spr1){
+        if(0<spr1.getX()&&spr1.getX()+spr1.getWidth()<Gdx.graphics.getWidth()&&0<spr1.getY()&&spr1.getY()+spr1.getHeight()<Gdx.graphics.getHeight()){
         return false;
-    }
-
-    @Override
-    public boolean keyUp(int i) {
-        nHamDir = 0;
+        }else{
         return true;
-    }
+        }
+        }
 
-    @Override
-    public boolean keyTyped(char c) {
-        return false;
-    }
+@Override
+public void dispose(){
+        batch.dispose();
+        }
 
-    @Override
-    public boolean touchDown(int i, int i1, int i2, int i3) {
+@Override
+public boolean keyDown(int i){
         return false;
-    }
+        }
 
-    @Override
-    public boolean touchUp(int i, int i1, int i2, int i3) {
-        return false;
-    }
+@Override
+public boolean keyUp(int i){
+        nHamDir=0;
+        return true;
+        }
 
-    @Override
-    public boolean touchDragged(int i, int i1, int i2) {
+@Override
+public boolean keyTyped(char c){
         return false;
-    }
+        }
 
-    @Override
-    public boolean mouseMoved(int i, int i1) {
+@Override
+public boolean touchDown(int i,int i1,int i2,int i3){
         return false;
-    }
+        }
 
-    @Override
-    public boolean scrolled(int i) {
+@Override
+public boolean touchUp(int i,int i1,int i2,int i3){
         return false;
-    }
-}
+        }
+
+@Override
+public boolean touchDragged(int i,int i1,int i2){
+        return false;
+        }
+
+@Override
+public boolean mouseMoved(int i,int i1){
+        return false;
+        }
+
+@Override
+public boolean scrolled(int i){
+        return false;
+        }
+        }
