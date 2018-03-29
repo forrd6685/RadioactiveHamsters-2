@@ -17,22 +17,22 @@ import java.util.ArrayList;
 public class ScrMain implements Screen, InputProcessor {
 
     SpriteBatch batch;
-    int nGhostX, nGhostY, nGhostDirOld, nGhostDirNew, nGhostdX, nGhostdY, nHamDir, nHamVorH, nHamdX, nHamdY, nRanGhostMove, nI, nX, nY;
-    boolean bMovement, bGhostOOB, bHamsterOOB, bGhostRanMove, bIsHit;
+    int nGhostDirOld, nGhostDirNew, nGhostdX, nGhostdY, nHamDir, nRanGhostMove, nI, nX, nY;
+    boolean bMovement, bGhostOOB, bGhost2OOB, bHamsterOOB;
     OrthographicCamera ocCam;
-    SprGhost sprGhost;
+    SprGhost sprGhost, sprGhost2;
     SprHamster sprHamster;
     GamHamsters gamHamsters;
-    ArrayList<SprPellet> Pellets = new ArrayList<SprPellet>();
+    ArrayList<SprPellet> alPellets = new ArrayList<SprPellet>();
 
     public ScrMain(GamHamsters _gamhamsters) {
         batch = new SpriteBatch();
-        sprGhost = new SprGhost(275, 200, 30, 30);
+        sprGhost = new SprGhost(375, 300, 30, 30);
+        sprGhost2 = new SprGhost(100, 250, 30, 30);
         sprHamster = new SprHamster(100, 100, 30, 30);
         nGhostdX = 0;
         nGhostdY = 0;
         bMovement = false;
-        bIsHit = false;
         ocCam = new OrthographicCamera();
         gamHamsters = _gamhamsters;
     }
@@ -43,14 +43,14 @@ public class ScrMain implements Screen, InputProcessor {
         ocCam.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         ocCam.update();
         Gdx.input.setInputProcessor(this);
-        nX = 100;
+        nX = 0;
         nY = 400;
-        for (nI = 0; nI < 55; nI++) {
-            Pellets.add(new SprPellet(nX, nY));
+        for (nI = 0; nI < 50; nI++) {
+            alPellets.add(new SprPellet(nX, nY));
             // https://gamedev.stackexchange.com/questions/89985/how-to-remove-game-objects-after-on-overlap-in-libgdx-game
             // https://beginnersbook.com/2013/12/java-arraylist/
             nX = nX + 50;
-            if (nX > Gdx.graphics.getWidth()) {
+            if (nX >= Gdx.graphics.getWidth()) {
                 nX = 100;
                 nY = nY - 100;
             }
@@ -62,11 +62,18 @@ public class ScrMain implements Screen, InputProcessor {
         Gdx.gl.glClearColor(255, 255, 255, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         nRanGhostMove = (int) (Math.random() * 50 + 1);
+
         if (nRanGhostMove == 1) {
             nGhostDirOld = nGhostDirNew;
             nGhostDirNew = sprGhost.GhostDirection(nGhostDirOld, nGhostDirNew);
         }
         sprGhost.Movement(nGhostDirNew);
+        nRanGhostMove = (int) (Math.random() * 50 + 1);
+        if (nRanGhostMove == 1) {
+            nGhostDirOld = nGhostDirNew;
+            nGhostDirNew = sprGhost.GhostDirection(nGhostDirOld, nGhostDirNew);
+        }
+        sprGhost2.Movement(nGhostDirNew);
         sprHamster.Movement(nHamDir);
         bGhostOOB = isOutOfBounds(sprGhost);
         while (bGhostOOB == true) {
@@ -76,26 +83,42 @@ public class ScrMain implements Screen, InputProcessor {
             sprGhost.Movement(nGhostDirNew);
             bGhostOOB = isOutOfBounds(sprGhost);
         }
+        bGhost2OOB = isOutOfBounds(sprGhost2);
+        while (bGhost2OOB == true) {
+            sprGhost2.OOB();
+            nGhostDirOld = nGhostDirNew;
+            nGhostDirNew = sprGhost2.GhostDirection(nGhostDirOld, nGhostDirNew);
+            sprGhost2.Movement(nGhostDirNew);
+            bGhost2OOB = isOutOfBounds(sprGhost2);
+        }
         bHamsterOOB = isOutOfBounds(sprHamster);
         if (bHamsterOOB == true) {
             sprHamster.OOB();
         }
-        bIsHit = isHit(sprGhost, sprHamster);
-        if (bIsHit == true) {
+        if (isHit(sprGhost, sprHamster) == true || isHit(sprGhost2, sprHamster) == true) {
             gamHamsters.updateState(2);
         }
         batch.begin();
         sprGhost.draw(batch);
+        sprGhost2.draw(batch);
         sprHamster.draw(batch);
-        for (int nJ = 0; nJ < Pellets.size(); nJ++) {
-            Pellets.get(nJ).draw(batch);
-            if (isHit(sprHamster, Pellets.get(nJ))) {
-                Pellets.remove(nJ);
+        for (int nJ = 0; nJ < alPellets.size(); nJ++) {
+            if (isHit(sprHamster, alPellets.get(nJ))) {
+                SprPellet.isDead = true;
             }
-            if (Pellets.isEmpty()) {
+            if (SprPellet.isDead == true) {
+                alPellets.remove(nJ);
+                System.out.println(alPellets.size());
+            } else {
+                alPellets.get(nJ).draw(batch);
+            }
+
+            if (alPellets.isEmpty()) {
                 gamHamsters.updateState(3);
             }
+            SprPellet.isDead = false;
         }
+
         batch.end();
     }
 
