@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.MathUtils;
 
 public class SprGhost extends Sprite {
 
-    int nDx, nDy;
+    int nDx, nDy, nDirNew = 1, nDirOld;
 
     public SprGhost(int nX, int nY, int nW, int nH) {
         super(new Texture(Gdx.files.internal("ghost.png")));
@@ -16,7 +16,7 @@ public class SprGhost extends Sprite {
 //        setFlip(true, true);
     }
 
-    public void Movement(int nDirNew) {
+    public void Movement() {
         nDx = 0;
         nDy = 0;
         if (nDirNew == 1) {
@@ -33,11 +33,13 @@ public class SprGhost extends Sprite {
     }
 
     public void OOB() {
+//        bMoveOut = true;
         setX(getX() - nDx);
         setY(getY() - nDy);
     }
 
-    public int GhostDirection(int nDirNew, int nDirOld) {
+    public int GhostDirection() {
+        nDirOld = nDirNew;
         while (nDirNew == nDirOld) {
             nDirNew = (int) (MathUtils.random() * 4 + 1);
         }
