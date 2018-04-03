@@ -9,39 +9,31 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.Screen;
-import com.gdx.hamsters.Container;
+import com.gdx.hamsters.GamContainer;
 import com.gdx.common.SprHamster;
 import com.gdx.common.SprGhost;
-import com.gdx.common.SprWall;
 import com.gdx.common.SprMap;
-import java.util.ArrayList;
 
-public class Map extends Game implements Screen, InputProcessor {
 
+public class scrMap extends Game implements Screen, InputProcessor {
     SpriteBatch batch;                                          // Wall Making Variables
-    int nGhostDirOld, nGhostDirNew, nHamDir, nRanGhostMove, nI, nFirstMove; //nX1, nY1, nX2, nY2, nWidth, nHeight;
-    boolean bMovement, bGhostOOB, bHamsterOOB, bGhostRanMove, bHit;
-    public boolean bMoveOut;
+    int nHamDir, nRanGhostMove, nFirstMove; //nX1, nY1, nX2, nY2, nWidth, nHeight;
+    boolean bMovement, bGhostOOB, bHamsterOOB, bHit, bGhostHitWall;
+    public static boolean bMoveOut = false;
     OrthographicCamera ocCam;
     SprGhost sprGhost;
     SprHamster sprHamster;
     SprMap sprMap;
-    Container gamHamsters;
-    ArrayList<SprWall> sprWally;
+    GamContainer gamHamsters;
 
-    public Map(Container _gamhamsters) {
+    public scrMap(GamContainer _gamhamsters) {
         batch = new SpriteBatch();
         sprGhost = new SprGhost(306, 253, 25, 25);
         sprHamster = new SprHamster(308, 196, 25, 25);
         sprMap = new SprMap();
-        nGhostDirNew = 1;
         bMovement = false;
-        bHit = false;
-        bMoveOut = false;
         ocCam = new OrthographicCamera();
         gamHamsters = _gamhamsters;
-        sprWally = new ArrayList<SprWall>();
-
     }
 
     @Override
@@ -50,7 +42,7 @@ public class Map extends Game implements Screen, InputProcessor {
         ocCam.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         ocCam.update();
         Gdx.input.setInputProcessor(this);
-        sprWally = SprWall.wallMaker(sprWally);
+        sprMap.wallMaker();
     }
 
     @Override
@@ -60,68 +52,50 @@ public class Map extends Game implements Screen, InputProcessor {
         nRanGhostMove = (int) (Math.random() * 50 + 1);
         if (bMoveOut = false) {
             if (nRanGhostMove == 1) {
-                nGhostDirOld = nGhostDirNew;
-                nGhostDirNew = sprGhost.GhostDirection(nGhostDirOld, nGhostDirNew);
+                sprGhost.GhostDirection();
             }
         }
-        sprGhost.Movement(nGhostDirNew);
-        if (bMovement == true) {
-            sprHamster.Movement(nHamDir);
-        } else if (bMovement == false) {
-            nHamDir = 0;
-            sprHamster.Movement(nHamDir);
-        }
-        while (bGhostOOB == true) {
-            sprGhost.OOB();
-            nGhostDirOld = nGhostDirNew;
-            nGhostDirNew = sprGhost.GhostDirection(nGhostDirOld, nGhostDirNew);
-            sprGhost.Movement(nGhostDirNew);
-            bGhostOOB = isOutOfBounds(sprGhost);
-        }
+        sprGhost.Movement();
+        sprHamster.Movement(nHamDir);
         bHamsterOOB = isOutOfBounds(sprHamster);
         if (bHamsterOOB == true) {
             sprHamster.OOB();
         }
-        for (nI = 0; nI < sprWally.size(); nI++) {
-            gHitWall(sprGhost, sprWally.get(nI));
+        sprMap.gHitWall(sprGhost);
+        while (bGhostOOB == true) {
+            sprGhost.OOB();
+            sprGhost.GhostDirection();
+            sprGhost.Movement();
+            bGhostOOB = isOutOfBounds(sprGhost);
         }
-        for (nI = 0; nI < sprWally.size(); nI++) {
-            hHitWall(sprHamster, sprWally.get(nI));
-            if (bHit == true) {
-                System.out.println("Hit Wall: " + nI);
-                bHit = false;
-            }
-        }
+        sprMap.hHitWall(sprHamster);
         batch.begin();
         sprGhost.draw(batch);
         sprHamster.draw(batch);
         sprMap.draw(batch);
-//        for (nI = 0; nI < sprWally.size(); nI++) {
-//            sprWally.get(nI).draw(batch);
-//        }
         batch.end();
     }
+//    public void hHitWall(Sprite sprHam, Sprite sprWall) {
+//        if (sprHam.getBoundingRectangle().overlaps(sprWall.getBoundingRectangle())) {
+//            sprHamster.OOB();
+//        }
+//    }
 
-    public void hHitWall(Sprite sprHam, Sprite sprWall) {
-        if (sprHam.getBoundingRectangle().overlaps(sprWall.getBoundingRectangle())) {
-            bHit = true;
-            sprHamster.OOB();
-        }
-    }
-
-    public void gHitWall(Sprite sprG, Sprite sprWall) {
-        //Using while stopped it glitching into a wall
-        while (sprG.getBoundingRectangle().overlaps(sprWall.getBoundingRectangle())) {
-            sprGhost.OOB();
-            bMoveOut = true;
-            nGhostDirOld = nGhostDirNew;
-            nGhostDirNew = sprGhost.GhostDirection(nGhostDirOld, nGhostDirNew);
-            sprGhost.Movement(nGhostDirNew);
-        }
-    }
+//    public void gHitWall(Sprite sprG, Sprite sprWall) {
+//        //Using while stopped it glitching into a wall
+//        while (sprG.getBoundingRectangle().overlaps(sprWall.getBoundingRectangle())) {
+//            sprGhost.OOB();
+//            nGhostDirOld = nGhostDirNew;
+//            nGhostDirNew = sprGhost.GhostDirection(nGhostDirOld, nGhostDirNew);
+//            sprGhost.Movement(nGhostDirNew);
+//        }
+//    }
 
     public static boolean isOutOfBounds(Sprite sprGhost) {
-        if (0 < sprGhost.getX() && sprGhost.getX() + sprGhost.getWidth() < Gdx.graphics.getWidth() && 0 < sprGhost.getY() && sprGhost.getY() + sprGhost.getHeight() < Gdx.graphics.getHeight()) {
+        float fGhostWidth = sprGhost.getWidth(), fGhostHeight = sprGhost.getHeight(), fX = sprGhost.getX();
+        float fY = sprGhost.getY(), fScrWidth = Gdx.graphics.getWidth(), fScrHeight = Gdx.graphics.getHeight();
+
+        if (0 < fX && fX + fGhostWidth < fScrWidth && 0 < fY && fY + fGhostHeight < fScrHeight) {
             return false;
         } else {
             return true;
@@ -165,7 +139,7 @@ public class Map extends Game implements Screen, InputProcessor {
 
     @Override
     public boolean keyUp(int keycode) {
-        bMovement = false;
+        nHamDir = 0;
         return false;
     }
 
@@ -202,7 +176,7 @@ public class Map extends Game implements Screen, InputProcessor {
 //            } else {
 //                nYPos = nY2;
 //            }
-//            System.out.println("sprWall[] = new SprWall(" + nXPos + ", " + nYPos + ", " + nWidth + ", " + nHeight + ");");
+//            System.out.println("Walls.add(new SprWall(" + nXPos + ", " + nYPos + ", " + nWidth + ", " + nHeight + "));");
 //        }
         return false;
     }

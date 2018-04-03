@@ -1,22 +1,23 @@
 package com.gdx.hamsters;
 
 import com.badlogic.gdx.Game;
-import com.gdx.map.Map;
+import com.gdx.map.scrMap;
 
-public class Container extends Game {
+public class GamContainer extends Game {
 
     //public static final String TITLE = "Radioactive Hamsters (On the Moon!)";
-    public static final String TITLE = "Map Test";
-    Map map;
+    public static final String TITLE = "scrMap Test";
+    scrMap scrmap;
+
     int nScreen;
 
     public void updateState() {
-        setScreen(map);
+        setScreen(scrmap);
     }
 
     @Override
     public void create() {
-        map = new Map(this);
+        scrmap = new scrMap(this);
         updateState();
 
     }
