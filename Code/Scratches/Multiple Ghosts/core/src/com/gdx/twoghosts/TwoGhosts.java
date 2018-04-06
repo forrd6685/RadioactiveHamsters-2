@@ -10,10 +10,10 @@ import com.gdx.sprites.SprGhost;
 
 public class TwoGhosts extends Game {
 	SpriteBatch batch;
-	int nGhostDirOld, nGhostDirNew, nGhost2DirOld, nGhost2DirNew, nGhostdX, nGhostdY, nRanGhostMove;
-	boolean bMovement, bGhostOOB, bGhost2OOB;
+	int nGhostdX, nGhostdY;
+	boolean bMovement;
 	OrthographicCamera ocCam;
-	SprGhost sprGhost, sprGhost2;
+	SprGhost arGhost[] = new SprGhost[4];
 
 	@Override
 	public void create() {
@@ -21,8 +21,10 @@ public class TwoGhosts extends Game {
 		ocCam.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		ocCam.update();
 		batch = new SpriteBatch();
-		sprGhost = new SprGhost(375, 300, 30, 30);
-		sprGhost2 = new SprGhost(100, 250, 30, 30);
+		arGhost[0] = new SprGhost(375, 300, 30, 30);
+		arGhost[1] = new SprGhost(100, 250, 30, 30);
+		arGhost[2] = new SprGhost(50, 250, 30, 30);
+		arGhost[3] = new SprGhost(200,50,30,30);
 		nGhostdX = 0;
 		nGhostdY = 0;
 		bMovement = false;
@@ -32,40 +34,16 @@ public class TwoGhosts extends Game {
 	public void render() {
 		Gdx.gl.glClearColor(255, 255, 255, 0);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		nRanGhostMove = (int) (Math.random() * 50 + 1);
-
-		if (nRanGhostMove == 1) {
-			nGhostDirOld = nGhostDirNew;
-			nGhostDirNew = sprGhost.GhostDirection(nGhostDirOld, nGhostDirNew);
+		for (int nNum = 0; nNum <= 3; nNum++) {
+			arGhost[nNum].Movement();
+			arGhost[nNum].isOut = isOutOfBounds(arGhost[nNum]);
 		}
-
-		if (nRanGhostMove == 2) {
-			nGhost2DirOld = nGhost2DirNew;
-			nGhost2DirNew = sprGhost2.GhostDirection(nGhost2DirOld, nGhost2DirNew);
-		}
-		sprGhost.Movement(nGhostDirNew);
-		sprGhost2.Movement(nGhost2DirNew);
-		bGhostOOB = isOutOfBounds(sprGhost);
-		while (bGhostOOB == true) {
-			sprGhost.OOB();
-			nGhostDirOld = nGhostDirNew;
-			nGhostDirNew = sprGhost.GhostDirection(nGhostDirOld, nGhostDirNew);
-			sprGhost.Movement(nGhostDirNew);
-			bGhostOOB = isOutOfBounds(sprGhost);
-		}
-		bGhost2OOB = isOutOfBounds(sprGhost2);
-		while (bGhost2OOB == true) {
-			sprGhost2.OOB();
-			nGhost2DirOld = nGhost2DirNew;
-			nGhost2DirNew = sprGhost2.GhostDirection(nGhost2DirOld, nGhost2DirNew);
-			sprGhost2.Movement(nGhost2DirNew);
-			bGhost2OOB = isOutOfBounds(sprGhost2);
-		}
-
 		batch.begin();
-		sprGhost.draw(batch);
-		sprGhost2.draw(batch);
+		for (int nNum2 = 0; nNum2 <= 3; nNum2++) {
+			arGhost[nNum2].draw(batch);
+		}
 		batch.end();
+		// nNum and nNum2 are placeholders for the loop
 	}
 
 	public static boolean isOutOfBounds(Sprite spr) {
