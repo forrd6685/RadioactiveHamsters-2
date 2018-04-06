@@ -32,7 +32,7 @@ public class SprGhost extends Sprite {
         setY(getY() + nDy);
     }
 
-    public void OOB(int nDirOld, int nDirNew) {
+    public void OOB() {
         setX(getX() - nDx);
         setY(getY() - nDy);
     }
