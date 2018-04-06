@@ -16,6 +16,6 @@ public class SprPellet extends Sprite {
      public SprPellet(int nX, int nY) {
         super(new Texture(Gdx.files.internal("dot.png")));
         setPosition(nX, nY);
-        setSize(10, 10);        
+        setSize(8, 8);
     }
 }

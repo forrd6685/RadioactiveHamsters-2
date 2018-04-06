@@ -3,13 +3,13 @@ package com.gdx.common;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.gdx.common.SprPellet;
 
 import java.util.ArrayList;
 
 public class SprMap extends Sprite {
-
-    int nI;
     ArrayList<SprWall> alSprWalls = new ArrayList<SprWall>();
+    public ArrayList<SprPellet> alSprPellets = new ArrayList<SprPellet>();
 
     public SprMap() {
         super(new Texture(Gdx.files.internal("Maze.png")));
@@ -69,8 +69,30 @@ public class SprMap extends Sprite {
         alSprWalls.add(new SprWall(386, 222, 15, 64)); // 45
         alSprWalls.add(new SprWall(237, 222, 162, 14)); // 46
     }
-    public void pelletPlacer() {
 
+    public void pelletPlacer() {
+        alSprWalls.add(new SprWall(237, 221, 163, 65));
+        alSprWalls.add(new SprWall(513, 242, 124, 31));
+        alSprWalls.add(new SprWall(0, 241, 124, 35));
+        alSprWalls.add(new SprWall(238, 99, 146, 29));
+        int nY, nX;
+        for (nY = 0; nY < Gdx.graphics.getHeight(); nY += 10) {
+            for (nX = 0; nX < Gdx.graphics.getWidth(); nX += 10) {
+                alSprPellets.add(new SprPellet(nX, nY));
+                for (int nI = 0; nI < alSprWalls.size(); nI++) {
+                    SprPellet sprPellet = alSprPellets.get(alSprPellets.size() - 1);
+                    SprWall sprWall = alSprWalls.get(nI);
+                    if (sprPellet.getBoundingRectangle().overlaps(sprWall.getBoundingRectangle())) {
+                        alSprPellets.remove(alSprPellets.size() - 1);
+                        break;
+                    }
+                }
+            }
+        }
+        alSprWalls.remove(new SprWall(237, 221, 163, 65));
+        alSprWalls.remove(new SprWall(513, 242, 124, 31));
+        alSprWalls.remove(new SprWall(0, 241, 124, 35));
+        alSprWalls.remove(new SprWall(238, 99, 146, 29));
     }
 //    public void gHitWall(SprGhost sprGhost) {
 //        for (nI = 0; nI < alSprWalls.size(); nI++) {

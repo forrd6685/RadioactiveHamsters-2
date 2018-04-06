@@ -14,7 +14,7 @@ import com.gdx.common.SprMap;
 
 
 public class scrMap extends Game implements Screen, InputProcessor {
-    int nX1, nY1;
+    int nX1, nY1, nX2, nY2, nWidth, nHeight;
     SpriteBatch batch;
     OrthographicCamera ocCam;
     SprMap sprMap;
@@ -43,9 +43,12 @@ public class scrMap extends Game implements Screen, InputProcessor {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         sprMap.draw(batch);
+        for (int nI = 0; nI < sprMap.alSprPellets.size(); nI++) {
+            sprMap.alSprPellets.get(nI).draw(batch);
+        }
         batch.end();
-    }
 
+    }
 
 
     @Override
@@ -90,30 +93,30 @@ public class scrMap extends Game implements Screen, InputProcessor {
             nX1 = nScreenX;
             nY1 = Gdx.graphics.getHeight() - nScreenY;
         }
-        System.out.println("nX: "+nX1+" nY: "+nY1);
+//        System.out.println("nX: " + nX1 + " nY: " + nY1);
         return false;
     }
 
     @Override
     public boolean touchUp(int nScreenX, int nScreenY, int pointer, int button) {
-//        if (button == Input.Buttons.LEFT) {
-//            int nXPos, nYPos;
-//            nX2 = nScreenX;
-//            nY2 = Gdx.graphics.getHeight() - nScreenY;
-//            nWidth = Math.abs(nX1 - nX2);
-//            nHeight = Math.abs(nY1 - nY2);
-//            if (nX1 < nX2) {
-//                nXPos = nX1;
-//            } else {
-//                nXPos = nX2;
-//            }
-//            if (nY1 < nY2) {
-//                nYPos = nY1;
-//            } else {
-//                nYPos = nY2;
-//            }
-//            System.out.println("Walls.add(new SprWall(" + nXPos + ", " + nYPos + ", " + nWidth + ", " + nHeight + "));");
-//        }
+        if (button == Input.Buttons.LEFT) {
+            int nXPos, nYPos;
+            nX2 = nScreenX;
+            nY2 = Gdx.graphics.getHeight() - nScreenY;
+            nWidth = Math.abs(nX1 - nX2);
+            nHeight = Math.abs(nY1 - nY2);
+            if (nX1 < nX2) {
+                nXPos = nX1;
+            } else {
+                nXPos = nX2;
+            }
+            if (nY1 < nY2) {
+                nYPos = nY1;
+            } else {
+                nYPos = nY2;
+            }
+            System.out.println("alSprWalls.add(new SprWall(" + nXPos + ", " + nYPos + ", " + nWidth + ", " + nHeight + "));");
+        }
         return false;
     }
 
