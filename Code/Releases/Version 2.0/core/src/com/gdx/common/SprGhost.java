@@ -1,4 +1,4 @@
-package com.gdx.sprites;
+package com.gdx.common;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -58,3 +58,4 @@ public class SprGhost extends Sprite {
         nCurrentDir = nDirNew;
     }
 }
+
