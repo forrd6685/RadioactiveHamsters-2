@@ -3,59 +3,75 @@ package com.gdx.common;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.MathUtils;
 
 public class SprGhost extends Sprite {
 
     int nDx, nDy;
-    int nCurrentDir = 1;
-    public boolean isOut = false;
+    int nCurrentDir;
+    boolean bFirst = true;
 
     public SprGhost(int nX, int nY, int nW, int nH) {
         super(new Texture(Gdx.files.internal("ghost.png")));
         setSize(nW, nH);
         setPosition(nX, nY);
-    }
-
-    public void Movement() {
-        if ((int) (Math.random() * 50 + 1) == 2) {
-            setDir(randDir());
-        }
-
         nDx = 0;
         nDy = 0;
-        if (nCurrentDir == 1) {
-            nDy = 2;
-        } else if (nCurrentDir == 2) {
-            nDx = 2;
-        } else if (nCurrentDir == 3) {
+        nCurrentDir = -1;
+        setFlip(false, true);
+    }
+    public void move() {
+        if (nCurrentDir == -1) { // up
+            nDx = 0;
             nDy = -2;
-        } else if (nCurrentDir == 4) {
+        } else if (nCurrentDir == 1) { // down
+            nDx = 0;
+            nDy = 2;
+        } else if (nCurrentDir == 2) { // left
+            nDx = 2;
+            nDy = 0;
+        } else if (nCurrentDir == -2) { // right
             nDx = -2;
+            nDy = 0;
         }
-
-        if (isOut) {
-            // get inbound
-            setX(getX() - nDx);
-            setY(getY() - nDy);
-            // pick a random direction
-            setDir(randDir());
+        setX(getX() + nDx);
+        setY(getY() + nDy);
+    }
+    public void OOB() {
+        setX(getX() - nDx);
+        setY(getY() - nDy);
+    }
+    public void pickNewDirection() {
+        if (bFirst) {
+            if (Math.random() < 0.5) {
+                nCurrentDir = 2;
+            } else {
+                nCurrentDir = -2;
+            }
+            bFirst = false;
         } else {
-            setX(getX() + nDx);
-            setY(getY() + nDy);
+//        int nNewDir = nCurrentDir;
+//        while (nNewDir == Math.abs(nCurrentDir)) {
+//            nNewDir = (int) (Math.random() * 4 + 1);
+//        }
+            if (Math.abs(nCurrentDir) == 1) {
+                if (Math.random() < 0.5) {
+                    nCurrentDir = 2;
+                } else {
+                    nCurrentDir = -2;
+                }
+            } else if (Math.abs(nCurrentDir) == 2) {
+                if (Math.random() < 0.5) {
+                    nCurrentDir = 1;
+                } else {
+                    nCurrentDir = -1;
+                }
+            }
         }
-    }
-
-    public int randDir() {
-        int nNewDir = (int) (Math.random() * 4 + 1);
-        while(nNewDir == nCurrentDir) {
-            nNewDir = (int) (Math.random() * 4 + 1);
-        }
-        System.out.println(nNewDir);
-        return nNewDir;
-    }
-
-    public void setDir(int nDirNew) {
-        nCurrentDir = nDirNew;
+//        if (nCurrentDir == 1) System.out.println("up");
+//        if (nCurrentDir == -1) System.out.println("down");
+//        if (nCurrentDir == 2) System.out.println("left");
+//        if (nCurrentDir == -2) System.out.println("right");
     }
 }
 

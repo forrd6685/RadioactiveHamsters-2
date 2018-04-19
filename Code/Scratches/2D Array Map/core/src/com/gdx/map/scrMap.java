@@ -49,15 +49,15 @@ public class scrMap extends Game implements Screen, InputProcessor {
         batch.begin();
         batch.setProjectionMatrix(ocCam.combined);
         sprMap.draw(batch);
-//        for (int nI = 0; nI < sprMap.alSprMainWalls.size(); nI++){
-//            sprMap.alSprMainWalls.get(nI).draw(batch);
-//        }
+        for (int nI = 0; nI < sprMap.alSprMainWalls.size(); nI++){
+            sprMap.alSprMainWalls.get(nI).draw(batch);
+        }
         for (int nI = 0; nI < sprMap.alSprPellets.size(); nI++){
             sprMap.alSprPellets.get(nI).draw(batch);
         }
-//        for (int nI = 0; nI < sprMap.alSprGhostHouse.size(); nI++){
-//            sprMap.alSprGhostHouse.get(nI).draw(batch);
-//        }
+        for (int nI = 0; nI < sprMap.alSprGhostHouse.size(); nI++){
+            sprMap.alSprGhostHouse.get(nI).draw(batch);
+        }
         batch.end();
 
     }

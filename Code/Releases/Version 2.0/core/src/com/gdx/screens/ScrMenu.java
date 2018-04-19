@@ -33,7 +33,7 @@ public class ScrMenu implements Screen, InputProcessor {
         Gdx.gl.glClearColor(255, 255, 255, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        batch.draw(tx, 100, 50);
+        batch.draw(tx, 5, 50);
         batch.end();
     }
 

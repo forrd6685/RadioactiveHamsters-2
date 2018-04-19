@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 
 public class SprGhostHouseWall extends Sprite {
-    public SprGhostHouseWall(int nX, int nY, int nW, int nH) {
-        super(new Texture(Gdx.files.internal("testwall2.jpg")));
+    public SprGhostHouseWall(int nX, int nY, int nW, int nH, Texture texture) {
+        super(texture);
         setPosition(nX, nY);
         setSize(nW, nH);
         setFlip(false, true);

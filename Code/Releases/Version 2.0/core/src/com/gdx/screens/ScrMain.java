@@ -10,110 +10,98 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.gdx.common.SprGhost;
 import com.gdx.common.SprHamster;
-import com.gdx.common.SprPellet;
+import com.gdx.common.SprMainWall;
+import com.gdx.common.SprMap;
 import com.gdx.hamsters.GamHamsters;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+
 
 public class ScrMain implements Screen, InputProcessor {
 
     SpriteBatch batch;
-    int nGhostdX, nGhostdY, nHamDir, nI, nX, nY;
+    int nGhostdX, nGhostdY, nHamDir, nX1, nY1;
     boolean bMovement, bHamsterOOB;
     OrthographicCamera ocCam;
-    SprGhost arGhost[] = new SprGhost[4];
+//    SprGhost arSprGhosts[] = new SprGhost[1];
+    ArrayList <SprGhost> arSprGhosts = new ArrayList<SprGhost>();
     SprHamster sprHamster;
     GamHamsters gamHamsters;
-    ArrayList<SprPellet> alPellets = new ArrayList<SprPellet>();
+    SprMap sprMap;
 
     public ScrMain(GamHamsters _gamhamsters) {
         batch = new SpriteBatch();
-        sprHamster = new SprHamster(100, 100, 30, 30);
         nGhostdX = 0;
         nGhostdY = 0;
         bMovement = false;
+        nGhostdX = 0;
+        nGhostdY = 0;
         ocCam = new OrthographicCamera();
+        sprMap = new SprMap();
+        sprHamster = new SprHamster(215, 272, 15, 15);
+        arSprGhosts.add(new SprGhost(215, 232, 15, 15));
+        arSprGhosts.add(new SprGhost(215, 231, 15, 15));
+        arSprGhosts.add(new SprGhost(215, 230, 15, 15));
+        arSprGhosts.add(new SprGhost(215, 229, 15, 15));
         gamHamsters = _gamhamsters;
     }
 
     @Override
     public void show() {
+        try {
+            sprMap.mapMaker();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         ocCam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         ocCam.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         ocCam.update();
         Gdx.input.setInputProcessor(this);
-        arGhost[0] = new SprGhost(375, 300, 30, 30);
-        arGhost[1] = new SprGhost(100, 250, 30, 30);
-        arGhost[2] = new SprGhost(50, 250, 30, 30);
-        arGhost[3] = new SprGhost(200, 50, 30, 30);
-        nX = 0;
-        nY = 400;
-        for (nI = 0; nI < 50; nI++) {
-            alPellets.add(new SprPellet(nX, nY));
-            // https://gamedev.stackexchange.com/questions/89985/how-to-remove-game-objects-after-on-overlap-in-libgdx-game
-            // https://beginnersbook.com/2013/12/java-arraylist/
-            nX = nX + 50;
-            if (nX >= Gdx.graphics.getWidth()) {
-                nX = 100;
-                nY = nY - 100;
-            }
-        }
     }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(255, 255, 255, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+        batch.setProjectionMatrix(ocCam.combined);
+        for (SprGhost sp : arSprGhosts) {
+            sp.move();
+            sprMap.gHitWall(sp);
+            warpingEdge(sp);
+        }
+//        for (int nNum = 0; nNum < arSprGhosts.size(); nNum++) {
+//            arSprGhosts[nNum].move();
+//            sprMap.gHitWall(arSprGhosts[nNum]);
+//            warpingEdge(arSprGhosts[nNum]);
+//        }
         sprHamster.Movement(nHamDir);
-        for (int nNum = 0; nNum <= 3; nNum++) {
-            arGhost[nNum].Movement();
-            arGhost[nNum].isOut = isOutOfBounds(arGhost[nNum]);
-        }
+        sprMap.hHitWall(sprHamster);
+        sprMap.warpingEdge(sprHamster);
         batch.begin();
-        for (int nNum2 = 0; nNum2 <= 3; nNum2++) {
-            arGhost[nNum2].draw(batch);
-        }
-        batch.end();
-        // nNum and nNum2 are placeholders for the loop
-        bHamsterOOB = isOutOfBounds(sprHamster);
-        if (bHamsterOOB == true) {
-            sprHamster.OOB();
-        }
-        batch.begin();
-
         sprHamster.draw(batch);
-        for (int nJ = 0; nJ < alPellets.size(); nJ++) {
-            if (isHit(sprHamster, alPellets.get(nJ))) {
-                SprPellet.isDead = true;
-            }
-            if (SprPellet.isDead == true) {
-                alPellets.remove(nJ);
-                System.out.println(alPellets.size());
-            } else {
-                alPellets.get(nJ).draw(batch);
-            }
-
-            if (alPellets.isEmpty()) {
-                gamHamsters.updateState(3);
-            }
-            SprPellet.isDead = false;
+        for (SprGhost sp : arSprGhosts) {
+            sp.draw(batch);
         }
-
+        sprMap.draw(batch);
+        for (int nI = 0; nI < sprMap.alSprPellets.size(); nI++) {
+            sprMap.alSprPellets.get(nI).draw(batch);
+        }
+//        for (int nI = 0; nI < sprMap.alSprMainWalls.size(); nI++) {
+//            sprMap.alSprMainWalls.get(nI).draw(batch);
+//        }
+//        for (int nI = 0; nI < sprMap.alSprGhostHouse.size(); nI++) {
+//            sprMap.alSprGhostHouse.get(nI).draw(batch);
+//        }
         batch.end();
     }
 
-
-
-    public boolean isHit(Sprite sprGhost, Sprite spr2) {
-        return sprGhost.getBoundingRectangle().overlaps(spr2.getBoundingRectangle());
-    }
-
-    public static boolean isOutOfBounds(Sprite spr) {
-        if (0 < spr.getX() && spr.getX() + spr.getWidth() < Gdx.graphics.getWidth() && 0 < spr.getY() && spr.getY() + spr.getHeight() < Gdx.graphics.getHeight()) {
-            return false;
-        } else {
-            return true;
+    public static void warpingEdge(Sprite spr1) {
+        float fHalfWidth = spr1.getWidth() / 2, fX = spr1.getX(), fScreenWidth = Gdx.graphics.getWidth();
+        if (fX + fHalfWidth < 0) {
+            spr1.setX(fScreenWidth - fHalfWidth - 1);
+        } else if (fX + fHalfWidth > fScreenWidth) {
+            spr1.setX(0 - fHalfWidth + 1);
         }
     }
 
@@ -154,7 +142,6 @@ public class ScrMain implements Screen, InputProcessor {
 
     @Override
     public boolean keyUp(int keycode) {
-        nHamDir = 0;
         return false;
     }
 
@@ -165,7 +152,12 @@ public class ScrMain implements Screen, InputProcessor {
     }
 
     @Override
-    public boolean touchDown(int i, int i1, int i2, int i3) {
+    public boolean touchDown(int nScreenX, int nScreenY, int pointer, int button) {
+        if (button == Input.Buttons.LEFT) {
+            nX1 = nScreenX;
+            nY1 = nScreenY;
+            System.out.println("nX: " + nX1 + " nY: " + nY1);
+        }
         return false;
     }
 

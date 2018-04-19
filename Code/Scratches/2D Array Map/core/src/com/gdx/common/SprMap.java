@@ -11,6 +11,9 @@ public class SprMap extends Sprite {
     public ArrayList<SprMainWall> alSprMainWalls = new ArrayList<SprMainWall>();
     public ArrayList<SprGhostHouseWall> alSprGhostHouse = new ArrayList<SprGhostHouseWall>();
     public ArrayList<SprPellet> alSprPellets = new ArrayList<SprPellet>();
+    public Texture PelletTexture = new Texture("dot.png");
+    public Texture MainWallTexture = new Texture("testwall.jpg");
+    public Texture GhostWallTexture = new Texture("testwall2.jpg");
     Scanner sIn;
 
     public SprMap() {
@@ -33,11 +36,11 @@ public class SprMap extends Sprite {
             for (int nX = 0; nX < 28; nX++) {
                 nTileMap[nY][nX] = sIn.nextInt();
                 if (nTileMap[nY][nX] == 0) {
-                    alSprPellets.add(new SprPellet(nX * nWidth + (nWidth / 2), nY * nHeight + (nHeight / 2)));
+                    alSprPellets.add(new SprPellet(nX * nWidth + (nWidth / 2), nY * nHeight + (nHeight / 2), PelletTexture));
                 } else if (nTileMap[nY][nX] == 1) {
-                    alSprMainWalls.add(new SprMainWall(nX * nWidth, nY * nHeight, nWidth, nHeight));
+                    alSprMainWalls.add(new SprMainWall(nX * nWidth, nY * nHeight, nWidth, nHeight, MainWallTexture));
                 } else if (nTileMap[nY][nX] == 2) {
-                    alSprGhostHouse.add(new SprGhostHouseWall(nX * nWidth, nY * nHeight, nWidth, nHeight));
+                    alSprGhostHouse.add(new SprGhostHouseWall(nX * nWidth, nY * nHeight, nWidth, nHeight, GhostWallTexture));
                 }
             }
         }
