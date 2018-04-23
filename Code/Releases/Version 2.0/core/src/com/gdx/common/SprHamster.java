@@ -1,15 +1,12 @@
 package com.gdx.common;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.gdx.hamsters.GamHamsters;
 
 public class SprHamster extends Sprite {
 
-    int nDx, nDy, nWidth = GamHamsters.SCREENWIDTH / 27, nHeight = GamHamsters.SCREENHEIGHT / 30;
-    public boolean isOut = false;
+    int nDx, nDy, nCurrentDir;
 
     public SprHamster(int nX, int nY, int nW, int nH) {
         super(new Texture(Gdx.files.internal("hamster.png")));
@@ -18,28 +15,52 @@ public class SprHamster extends Sprite {
         setFlip(false, true);
     }
 
-    public void Movement(int nHamDir) {
-        if (nHamDir == 1) {
+    //Thanks Abdullah
+    public void tryMove(int nNewDir, SprMap map) {
+        if (nNewDir == 1) {
             nDy = -2;
             nDx = 0;
-        } else if (nHamDir == 2) {
+        } else if (nNewDir == 2) {
             nDx = 2;
             nDy = 0;
-        } else if (nHamDir == 3) {
+        } else if (nNewDir == 3) {
             nDy = 2;
             nDx = 0;
-        } else if (nHamDir == 4) {
+        } else if (nNewDir == 4) {
             nDx = -2;
             nDy = 0;
-        } else {
+        }
+        float fX = getX() + nDx;
+        float fY = getY() + nDy;
+        if (!map.hHitWall(this, fX, fY)) {
+            nCurrentDir = nNewDir;
+        }
+    }
+
+    public void move(int nNewDir, SprMap map) {
+
+        if (nNewDir != nCurrentDir) {
+            tryMove(nNewDir, map);
+        }
+
+        if (nCurrentDir == 1) {
+            nDy = -2;
             nDx = 0;
+        } else if (nCurrentDir == 2) {
+            nDx = 2;
+            nDy = 0;
+        } else if (nCurrentDir == 3) {
+            nDy = 2;
+            nDx = 0;
+        } else if (nCurrentDir == 4) {
+            nDx = -2;
             nDy = 0;
         }
         setX(getX() + nDx);
         setY(getY() + nDy);
     }
 
-    public void OOB() {
+    public void outOfBounds() {
         setX(getX() - nDx);
         setY(getY() - nDy);
     }

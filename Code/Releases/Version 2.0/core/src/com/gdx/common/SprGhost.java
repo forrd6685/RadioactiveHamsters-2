@@ -20,27 +20,7 @@ public class SprGhost extends Sprite {
         nCurrentDir = -1;
         setFlip(false, true);
     }
-    public void move() {
-        if (nCurrentDir == -1) { // up
-            nDx = 0;
-            nDy = -2;
-        } else if (nCurrentDir == 1) { // down
-            nDx = 0;
-            nDy = 2;
-        } else if (nCurrentDir == 2) { // left
-            nDx = 2;
-            nDy = 0;
-        } else if (nCurrentDir == -2) { // right
-            nDx = -2;
-            nDy = 0;
-        }
-        setX(getX() + nDx);
-        setY(getY() + nDy);
-    }
-    public void OOB() {
-        setX(getX() - nDx);
-        setY(getY() - nDy);
-    }
+
     public void pickNewDirection() {
         if (bFirst) {
             if (Math.random() < 0.5) {
@@ -72,6 +52,29 @@ public class SprGhost extends Sprite {
 //        if (nCurrentDir == -1) System.out.println("down");
 //        if (nCurrentDir == 2) System.out.println("left");
 //        if (nCurrentDir == -2) System.out.println("right");
+    }
+
+    public void move() {
+        if (nCurrentDir == -1) { // up
+            nDx = 0;
+            nDy = -2;
+        } else if (nCurrentDir == 1) { // down
+            nDx = 0;
+            nDy = 2;
+        } else if (nCurrentDir == 2) { // left
+            nDx = 2;
+            nDy = 0;
+        } else if (nCurrentDir == -2) { // right
+            nDx = -2;
+            nDy = 0;
+        }
+        setX(getX() + nDx);
+        setY(getY() + nDy);
+    }
+
+    public void OOB() {
+        setX(getX() - nDx);
+        setY(getY() - nDy);
     }
 }
 

@@ -7,13 +7,12 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.gdx.common.SprMap;
 import com.gdx.hamsters.GamHamsters;
 
 public class ScrMenu implements Screen, InputProcessor {
 
-    String sMenu;
     GamHamsters gamHamster;
-    int nScreen;
     Texture tx;
     SpriteBatch batch;
 
@@ -33,7 +32,7 @@ public class ScrMenu implements Screen, InputProcessor {
         Gdx.gl.glClearColor(255, 255, 255, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        batch.draw(tx, 5, 50);
+        batch.draw(tx, 0,0);
         batch.end();
     }
 

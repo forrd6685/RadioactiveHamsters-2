@@ -10,27 +10,23 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.gdx.common.SprGhost;
 import com.gdx.common.SprHamster;
-import com.gdx.common.SprMainWall;
 import com.gdx.common.SprMap;
 import com.gdx.hamsters.GamHamsters;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-
-public class ScrMain implements Screen, InputProcessor {
-
+public class ScrPlay implements Screen, InputProcessor {
     SpriteBatch batch;
-    int nGhostdX, nGhostdY, nHamDir, nX1, nY1;
-    boolean bMovement, bHamsterOOB;
+    int nGhostdX, nGhostdY, nWantMove, nX1, nY1;
+    boolean bMovement, bIsHit;
     OrthographicCamera ocCam;
-//    SprGhost arSprGhosts[] = new SprGhost[1];
-    ArrayList <SprGhost> arSprGhosts = new ArrayList<SprGhost>();
+    ArrayList<SprGhost> arSprGhosts = new ArrayList<SprGhost>();
     SprHamster sprHamster;
     GamHamsters gamHamsters;
     SprMap sprMap;
 
-    public ScrMain(GamHamsters _gamhamsters) {
+    public ScrPlay(GamHamsters _gamhamsters) {
         batch = new SpriteBatch();
         nGhostdX = 0;
         nGhostdY = 0;
@@ -39,7 +35,7 @@ public class ScrMain implements Screen, InputProcessor {
         nGhostdY = 0;
         ocCam = new OrthographicCamera();
         sprMap = new SprMap();
-        sprHamster = new SprHamster(215, 272, 15, 15);
+        sprHamster = new SprHamster(215, 369, 15, 15);
         arSprGhosts.add(new SprGhost(215, 232, 15, 15));
         arSprGhosts.add(new SprGhost(215, 231, 15, 15));
         arSprGhosts.add(new SprGhost(215, 230, 15, 15));
@@ -68,16 +64,17 @@ public class ScrMain implements Screen, InputProcessor {
         for (SprGhost sp : arSprGhosts) {
             sp.move();
             sprMap.gHitWall(sp);
-            warpingEdge(sp);
+            sprMap.warpingEdge(sp);
         }
-//        for (int nNum = 0; nNum < arSprGhosts.size(); nNum++) {
-//            arSprGhosts[nNum].move();
-//            sprMap.gHitWall(arSprGhosts[nNum]);
-//            warpingEdge(arSprGhosts[nNum]);
-//        }
-        sprHamster.Movement(nHamDir);
+        sprHamster.move(nWantMove, sprMap);
         sprMap.hHitWall(sprHamster);
         sprMap.warpingEdge(sprHamster);
+//        for (SprGhost sp : arSprGhosts) {
+//            bIsHit = isHit(sprHamster, sp);
+//            if (bIsHit) {
+//                gamHamsters.updateState(2);
+//            }
+//        }
         batch.begin();
         sprHamster.draw(batch);
         for (SprGhost sp : arSprGhosts) {
@@ -85,24 +82,32 @@ public class ScrMain implements Screen, InputProcessor {
         }
         sprMap.draw(batch);
         for (int nI = 0; nI < sprMap.alSprPellets.size(); nI++) {
-            sprMap.alSprPellets.get(nI).draw(batch);
+            if (isHit(sprHamster, sprMap.alSprPellets.get(nI))) {
+                sprMap.alSprPellets.get(nI).isEaten = true;
+            }
+            if (sprMap.alSprPellets.get(nI).isEaten == true) {
+                sprMap.alSprPellets.remove(nI);
+                System.out.println(sprMap.alSprPellets.size());
+            } else {
+                sprMap.alSprPellets.get(nI).draw(batch);
+                sprMap.alSprPellets.get(nI).isEaten = false;
+            }
+            if (sprMap.alSprPellets.isEmpty()) {
+                gamHamsters.updateState(3);
+            }
+
         }
 //        for (int nI = 0; nI < sprMap.alSprMainWalls.size(); nI++) {
 //            sprMap.alSprMainWalls.get(nI).draw(batch);
 //        }
 //        for (int nI = 0; nI < sprMap.alSprGhostHouse.size(); nI++) {
 //            sprMap.alSprGhostHouse.get(nI).draw(batch);
-//        }
+//        }}
         batch.end();
     }
 
-    public static void warpingEdge(Sprite spr1) {
-        float fHalfWidth = spr1.getWidth() / 2, fX = spr1.getX(), fScreenWidth = Gdx.graphics.getWidth();
-        if (fX + fHalfWidth < 0) {
-            spr1.setX(fScreenWidth - fHalfWidth - 1);
-        } else if (fX + fHalfWidth > fScreenWidth) {
-            spr1.setX(0 - fHalfWidth + 1);
-        }
+    public boolean isHit(Sprite spr1, Sprite spr2) {
+        return spr1.getBoundingRectangle().overlaps(spr2.getBoundingRectangle());
     }
 
     @Override
@@ -128,14 +133,14 @@ public class ScrMain implements Screen, InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         bMovement = true;
-        if (keycode == Input.Keys.W) {
-            nHamDir = 1;
-        } else if (keycode == Input.Keys.D) {
-            nHamDir = 2;
-        } else if (keycode == Input.Keys.S) {
-            nHamDir = 3;
-        } else if (keycode == Input.Keys.A) {
-            nHamDir = 4;
+        if (keycode == Input.Keys.W || keycode == Input.Keys.UP) {
+            nWantMove = 1;
+        } else if (keycode == Input.Keys.D || keycode == Input.Keys.RIGHT) {
+            nWantMove = 2;
+        } else if (keycode == Input.Keys.S || keycode == Input.Keys.DOWN) {
+            nWantMove = 3;
+        } else if (keycode == Input.Keys.A || keycode == Input.Keys.LEFT) {
+            nWantMove = 4;
         }
         return false;
     }

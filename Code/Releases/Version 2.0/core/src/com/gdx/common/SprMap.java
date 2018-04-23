@@ -3,6 +3,8 @@ package com.gdx.common;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Rectangle;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -27,7 +29,10 @@ public class SprMap extends Sprite {
         setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         setFlip(false, true);
     }
-    public void mapMaker () throws FileNotFoundException {
+
+
+
+    public void mapMaker() throws FileNotFoundException {
 //        0 is pellets, 1 is walls, 2 is ghost house, 3 is empty.
 //        2D Array taken from: https://github.com/Code-Bullet/PacmanGame/blob/master/PacmanGame/PacmanGame.pde
         sIn = new Scanner(new FileReader("MapArray.txt"));
@@ -36,7 +41,7 @@ public class SprMap extends Sprite {
             for (int nX = 0; nX < 28; nX++) {
                 nTileMap[nY][nX] = sIn.nextInt();
                 if (nTileMap[nY][nX] == 0) {
-                    alSprPellets.add(new SprPellet(nX * nWidth + (nWidth+1 / 2)-10, nY * nHeight + (nHeight+1 / 2)-10, PelletTexture));
+                    alSprPellets.add(new SprPellet(nX * nWidth + (nWidth + 1 / 2) - 10, nY * nHeight + (nHeight + 1 / 2) - 10, PelletTexture));
                 } else if (nTileMap[nY][nX] == 1) {
                     alSprMainWalls.add(new SprMainWall(nX * nWidth, nY * nHeight, nWidth, nHeight, MainWallTexture));
                 } else if (nTileMap[nY][nX] == 2) {
@@ -45,6 +50,7 @@ public class SprMap extends Sprite {
             }
         }
     }
+
     public void gHitWall(SprGhost sprGhost) {
         //    Ghost
         for (int nI = 0; nI < alSprMainWalls.size(); nI++) {
@@ -56,27 +62,53 @@ public class SprMap extends Sprite {
 
         }
     }
-    public void hHitWall(SprHamster sprHamster) {
-        //    Hamster
+
+    public boolean hHitWall(SprHamster sprHamster) {
+        //    Hamster Actual
         for (int nI = 0; nI < alSprMainWalls.size(); nI++) {
             SprMainWall sprMainWall = alSprMainWalls.get(nI);
             if (sprHamster.getBoundingRectangle().overlaps(sprMainWall.getBoundingRectangle())) {
-                sprHamster.OOB();
+                sprHamster.outOfBounds();
+                return true;
+
             }
         }
         for (int nI = 0; nI < alSprGhostHouse.size(); nI++) {
             SprGhostHouseWall sprGhostWall = alSprGhostHouse.get(nI);
             if (sprHamster.getBoundingRectangle().overlaps(sprGhostWall.getBoundingRectangle())) {
-                sprHamster.OOB();
+                sprHamster.outOfBounds();
+                return true;
             }
         }
+        return false;
     }
-    public static void warpingEdge(Sprite spr1) {
-        float fHalfWidth = spr1.getWidth() / 2, fX = spr1.getX(), fScreenWidth = Gdx.graphics.getWidth();
-        if (fX + fHalfWidth < 0) {
-            spr1.setX(fScreenWidth - fHalfWidth - 1);
-        } else if (fX + fHalfWidth > fScreenWidth) {
-            spr1.setX(0 - fHalfWidth + 1);
+
+    public boolean hHitWall(SprHamster sprHamster, float x, float y) {
+        //    Hamster Check
+        Rectangle r1 = sprHamster.getBoundingRectangle();
+        r1.setX(x);
+        r1.setY(y);
+        for (int nI = 0; nI < alSprMainWalls.size(); nI++) {
+            SprMainWall sprMainWall = alSprMainWalls.get(nI);
+            if (r1.overlaps(sprMainWall.getBoundingRectangle())) {
+                return true;
+            }
+        }
+        for (int nI = 0; nI < alSprGhostHouse.size(); nI++) {
+            SprGhostHouseWall sprGhostWall = alSprGhostHouse.get(nI);
+            if (r1.overlaps(sprGhostWall.getBoundingRectangle())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void warpingEdge(Sprite spr1) {
+        float fX = spr1.getX(), fScreenWidth = Gdx.graphics.getWidth();
+        if (fX + spr1.getWidth() < 0) {
+            spr1.setX(fScreenWidth);
+        } else if (fX > fScreenWidth) {
+            spr1.setX(0);
         }
     }
 }
