@@ -1,22 +1,25 @@
 package com.gdx.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.gdx.buttons.Buttons;
+import com.gdx.sprites.SprButton;
 
 public class ScrPaul implements Screen, InputProcessor {
     SpriteBatch batch;
     Buttons buttons;
-    Texture txPaul, txBack;
+    Texture txPaul;
+    SprButton sprButtonBack;
 
     public ScrPaul (Buttons _buttons) {
         batch = new SpriteBatch();
         txPaul = new Texture("Paul.jpg");
-        txBack = new Texture ("Back.png");
+        sprButtonBack = new SprButton (100,200,0,0,"Back.png");
         buttons = _buttons;
     }
 
@@ -31,7 +34,7 @@ public class ScrPaul implements Screen, InputProcessor {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         batch.draw(txPaul, 200, 200, 200, 200);
-        batch.draw(txBack, 0,0, 100,200);
+        sprButtonBack.draw(batch);
         batch.end();
     }
 
@@ -77,6 +80,15 @@ public class ScrPaul implements Screen, InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if (button == Input.Buttons.LEFT) {
+            screenY = (Gdx.graphics.getHeight() - screenY);
+            System.out.println(screenX + " " + screenY);
+            if (sprButtonBack.isClicked(screenX, screenY)) {
+                buttons.updateState(0);
+            }
+
+
+        }
         return false;
     }
 

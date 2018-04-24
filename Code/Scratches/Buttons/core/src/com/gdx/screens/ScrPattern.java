@@ -1,6 +1,7 @@
 package com.gdx.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -35,7 +36,7 @@ public class ScrPattern implements Screen, InputProcessor {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         batch.draw(txPattern, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch.draw(txBack, 0,0, 100,200);
+        sprButtonBack.draw(batch);
         batch.end();
     }
 
@@ -81,6 +82,15 @@ public class ScrPattern implements Screen, InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if (button == Input.Buttons.LEFT) {
+            screenY = (Gdx.graphics.getHeight() - screenY);
+            System.out.println(screenX + " " + screenY);
+            if (sprButtonBack.isClicked(screenX, screenY)) {
+                buttons.updateState(0);
+            }
+
+
+        }
         return false;
     }
 
