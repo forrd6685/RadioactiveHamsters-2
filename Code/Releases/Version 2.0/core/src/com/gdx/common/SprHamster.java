@@ -1,59 +1,67 @@
 package com.gdx.common;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class SprHamster extends Sprite {
 
-    int nDx, nDy, nHamDir;
-    boolean bMovement = false;
+    int nDx, nDy, nCurrentDir;
 
     public SprHamster(int nX, int nY, int nW, int nH) {
         super(new Texture(Gdx.files.internal("hamster.png")));
         setPosition(nX, nY);
         setSize(nW, nH);
+        setFlip(false, true);
     }
-    
-    public boolean Direction (int keycode) {
-        bMovement = true;
-        if (keycode == Input.Keys.W) {
-            nHamDir = 1;
-        } else if (keycode == Input.Keys.D) {
-            nHamDir = 2;
-        } else if (keycode == Input.Keys.S) {
-            nHamDir = 3;
-        } else if (keycode == Input.Keys.A) {
-            nHamDir = 4;
-        }
-        return false;
-    }
-    
-    public void Movement(int nHamDir) {
-        if (nHamDir == 1) {
-            nDy = 2;
-            nDx = 0;
-        } else if (nHamDir == 2) {
-            nDx = 2;
-            nDy = 0;
-        } else if (nHamDir == 3) {
+
+    //Thanks Abdullah
+    public void tryMove(int nNewDir, SprMap map) {
+        if (nNewDir == 1) {
             nDy = -2;
             nDx = 0;
-        } else if (nHamDir == 4) {
+        } else if (nNewDir == 2) {
+            nDx = 2;
+            nDy = 0;
+        } else if (nNewDir == 3) {
+            nDy = 2;
+            nDx = 0;
+        } else if (nNewDir == 4) {
             nDx = -2;
             nDy = 0;
-        } else {
-            nDx = 0;
-            nDy = 0;
+        }
+        float fX = getX() + nDx;
+        float fY = getY() + nDy;
+        if (!map.hHitWall(this, fX, fY)) {
+            nCurrentDir = nNewDir;
+        }
+    }
+
+    public void move(int nNewDir, SprMap map) {
+
+        if (nNewDir != nCurrentDir) {
+            tryMove(nNewDir, map);
         }
 
+        if (nCurrentDir == 1) {
+            nDy = -2;
+            nDx = 0;
+        } else if (nCurrentDir == 2) {
+            nDx = 2;
+            nDy = 0;
+        } else if (nCurrentDir == 3) {
+            nDy = 2;
+            nDx = 0;
+        } else if (nCurrentDir == 4) {
+            nDx = -2;
+            nDy = 0;
+        }
         setX(getX() + nDx);
         setY(getY() + nDy);
     }
 
-    public void OOB() {
+    public void outOfBounds() {
         setX(getX() - nDx);
         setY(getY() - nDy);
     }
- }
+}
