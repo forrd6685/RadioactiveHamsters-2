@@ -23,11 +23,14 @@ public class ScrGameOver implements Screen {
         batch = new SpriteBatch();
         tExp = new Texture("explosion.jpg");
 
+
     }
 
     public void render(float delta) {
+
         batch.begin();
         batch.draw(tExp, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
         batch.end();
     }
 

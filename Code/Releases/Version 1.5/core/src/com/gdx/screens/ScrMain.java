@@ -1,7 +1,6 @@
 package com.gdx.screens;
 
 import com.gdx.common.SprHamster;
-import com.gdx.common.SprGhost;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.gdx.hamsters.GamHamsters;
@@ -12,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.gdx.common.SprPellet;
+import com.gdx.sprites.SprGhost;
 import java.util.ArrayList;
 
 public class ScrMain implements Screen, InputProcessor {

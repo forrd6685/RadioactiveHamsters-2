@@ -80,6 +80,11 @@ public class ScrMain implements Screen, InputProcessor {
         if (bHamsterOOB == true) {
             sprHamster.OOB();
         }
+        for(int nK = 0; nK <= 3; nK++ ) {
+            if (isHit(arGhost[nK], sprHamster)) {
+                gamHamsters.updateState(2);
+            }
+        }
         batch.begin();
 
         sprHamster.draw(batch);
@@ -105,8 +110,8 @@ public class ScrMain implements Screen, InputProcessor {
 
 
 
-    public boolean isHit(Sprite sprGhost, Sprite spr2) {
-        return sprGhost.getBoundingRectangle().overlaps(spr2.getBoundingRectangle());
+    public boolean isHit(Sprite spr1, Sprite spr2) {
+        return spr1.getBoundingRectangle().overlaps(spr2.getBoundingRectangle());
     }
 
     public static boolean isOutOfBounds(Sprite spr) {
