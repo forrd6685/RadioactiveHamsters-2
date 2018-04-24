@@ -5,14 +5,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 
-public class SprGhost extends Sprite {
+public class SprMartian extends Sprite {
 
     int nDx, nDy;
     int nCurrentDir;
     boolean bFirst = true;
 
-    public SprGhost(int nX, int nY, int nW, int nH) {
-        super(new Texture(Gdx.files.internal("ghost.png")));
+    public SprMartian(int nX, int nY, int nW, int nH) {
+        super(new Texture(Gdx.files.internal("martian.png")));
         setSize(nW, nH);
         setPosition(nX, nY);
         nDx = 0;

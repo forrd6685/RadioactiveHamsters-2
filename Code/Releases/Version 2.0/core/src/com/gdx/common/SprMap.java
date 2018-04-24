@@ -14,7 +14,7 @@ public class SprMap extends Sprite {
     public ArrayList<SprMainWall> alSprMainWalls = new ArrayList<SprMainWall>();
     public ArrayList<SprGhostHouseWall> alSprGhostHouse = new ArrayList<SprGhostHouseWall>();
     public ArrayList<SprPellet> alSprPellets = new ArrayList<SprPellet>();
-    public Texture PelletTexture = new Texture("dot.png");
+    public Texture PelletTexture = new Texture("dot2.png");
     public Texture MainWallTexture = new Texture("testwall.jpg");
     public Texture GhostWallTexture = new Texture("testwall2.jpg");
     public int nScreenWidth = Gdx.graphics.getWidth();
@@ -29,9 +29,6 @@ public class SprMap extends Sprite {
         setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         setFlip(false, true);
     }
-
-
-
     public void mapMaker() throws FileNotFoundException {
 //        0 is pellets, 1 is walls, 2 is ghost house, 3 is empty.
 //        2D Array taken from: https://github.com/Code-Bullet/PacmanGame/blob/master/PacmanGame/PacmanGame.pde
@@ -51,13 +48,13 @@ public class SprMap extends Sprite {
         }
     }
 
-    public void gHitWall(SprGhost sprGhost) {
+    public void gHitWall(SprMartian sprMartian) {
         //    Ghost
         for (int nI = 0; nI < alSprMainWalls.size(); nI++) {
             SprMainWall sprMainWall = alSprMainWalls.get(nI);
-            if (sprGhost.getBoundingRectangle().overlaps(sprMainWall.getBoundingRectangle())) {
-                sprGhost.OOB();
-                sprGhost.pickNewDirection();
+            if (sprMartian.getBoundingRectangle().overlaps(sprMainWall.getBoundingRectangle())) {
+                sprMartian.OOB();
+                sprMartian.pickNewDirection();
             }
 
         }

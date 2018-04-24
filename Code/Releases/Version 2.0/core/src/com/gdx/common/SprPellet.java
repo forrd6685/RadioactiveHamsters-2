@@ -17,7 +17,7 @@ public class SprPellet extends Sprite {
     public SprPellet(int nX, int nY, Texture texture) {
         super(texture);
         setPosition(nX, nY);
-        setSize(5, 5);
+        setSize(4, 4);
         setFlip(false, true);
     }
 }

@@ -6,9 +6,10 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.gdx.common.SprGhost;
+import com.gdx.common.SprMartian;
 import com.gdx.common.SprHamster;
 import com.gdx.common.SprMap;
 import com.gdx.hamsters.GamHamsters;
@@ -21,10 +22,12 @@ public class ScrPlay implements Screen, InputProcessor {
     int nGhostdX, nGhostdY, nWantMove, nX1, nY1;
     boolean bMovement, bIsHit;
     OrthographicCamera ocCam;
-    ArrayList<SprGhost> arSprGhosts = new ArrayList<SprGhost>();
+    ArrayList<SprMartian> arSprMartians = new ArrayList<SprMartian>();
     SprHamster sprHamster;
     GamHamsters gamHamsters;
     SprMap sprMap;
+    Texture tx;
+    Sprite sprBackground;
 
     public ScrPlay(GamHamsters _gamhamsters) {
         batch = new SpriteBatch();
@@ -36,10 +39,12 @@ public class ScrPlay implements Screen, InputProcessor {
         ocCam = new OrthographicCamera();
         sprMap = new SprMap();
         sprHamster = new SprHamster(215, 369, 15, 15);
-        arSprGhosts.add(new SprGhost(215, 232, 15, 15));
-        arSprGhosts.add(new SprGhost(215, 231, 15, 15));
-        arSprGhosts.add(new SprGhost(215, 230, 15, 15));
-        arSprGhosts.add(new SprGhost(215, 229, 15, 15));
+        arSprMartians.add(new SprMartian(215, 232, 15, 15));
+        arSprMartians.add(new SprMartian(215, 231, 15, 15));
+        arSprMartians.add(new SprMartian(215, 230, 15, 15));
+        arSprMartians.add(new SprMartian(215, 229, 15, 15));
+        tx = new Texture("background1.jpg");
+        sprBackground = new Sprite(tx);
         gamHamsters = _gamhamsters;
     }
 
@@ -61,7 +66,7 @@ public class ScrPlay implements Screen, InputProcessor {
         Gdx.gl.glClearColor(255, 255, 255, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.setProjectionMatrix(ocCam.combined);
-        for (SprGhost sp : arSprGhosts) {
+        for (SprMartian sp : arSprMartians) {
             sp.move();
             sprMap.gHitWall(sp);
             sprMap.warpingEdge(sp);
@@ -69,15 +74,16 @@ public class ScrPlay implements Screen, InputProcessor {
         sprHamster.move(nWantMove, sprMap);
         sprMap.hHitWall(sprHamster);
         sprMap.warpingEdge(sprHamster);
-//        for (SprGhost sp : arSprGhosts) {
-//            bIsHit = isHit(sprHamster, sp);
-//            if (bIsHit) {
-//                gamHamsters.updateState(2);
-//            }
-//        }
+        for (SprMartian sp : arSprMartians) {
+            bIsHit = isHit(sprHamster, sp);
+            if (bIsHit) {
+                gamHamsters.updateState(2);
+            }
+        }
         batch.begin();
+        batch.draw(sprBackground, 0,0, GamHamsters.SCREENWIDTH, GamHamsters.SCREENHEIGHT);
         sprHamster.draw(batch);
-        for (SprGhost sp : arSprGhosts) {
+        for (SprMartian sp : arSprMartians) {
             sp.draw(batch);
         }
         sprMap.draw(batch);
@@ -87,7 +93,6 @@ public class ScrPlay implements Screen, InputProcessor {
             }
             if (sprMap.alSprPellets.get(nI).isEaten == true) {
                 sprMap.alSprPellets.remove(nI);
-                System.out.println(sprMap.alSprPellets.size());
             } else {
                 sprMap.alSprPellets.get(nI).draw(batch);
                 sprMap.alSprPellets.get(nI).isEaten = false;
@@ -102,7 +107,7 @@ public class ScrPlay implements Screen, InputProcessor {
 //        }
 //        for (int nI = 0; nI < sprMap.alSprGhostHouse.size(); nI++) {
 //            sprMap.alSprGhostHouse.get(nI).draw(batch);
-//        }}
+//        }
         batch.end();
     }
 
