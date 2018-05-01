@@ -20,7 +20,6 @@ public class SprGhost extends Sprite {
         if ((int) (Math.random() * 50 + 1) == 2) {
             setDir(randDir());
         }
-
         nDx = 0;
         nDy = 0;
         if (nCurrentDir == 1) {
