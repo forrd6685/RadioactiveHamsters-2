@@ -13,12 +13,12 @@ public class SpriteSheetAnimator {
     private int nRows, nColumns;
     private float fChangeRate;
 
-    public SpriteSheetAnimator(Texture TextureSheet, int nRows, int nColumns) {
+    public SpriteSheetAnimator(Texture TextureSheet, int nRows, int nColumns, int fChangeRate) {
         this.TextureSheet = TextureSheet;
         this.nRows = nRows;
         this.nColumns = nColumns;
         arAnimatioin = new Animation[nRows];
-        this.fChangeRate = 1;
+        this.fChangeRate = 2;
     }
     public Animation[] animate () {
         fW = TextureSheet.getWidth() / nColumns;
@@ -28,7 +28,6 @@ public class SpriteSheetAnimator {
             for (int j = 0; j < nColumns; j++) {
                 fX = j * fW;
                 fY = i * fH;
-                System.out.println(fX + " : " + fY);
                 TempSpriteSheet = new Sprite(TextureSheet, fX, fY, fW, fH);
                 arTempSprites[j] = new Sprite(TempSpriteSheet);
             }
