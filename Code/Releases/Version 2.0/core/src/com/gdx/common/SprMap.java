@@ -53,7 +53,8 @@ public class SprMap extends Sprite {
         for (int nI = 0; nI < alSprMainWalls.size(); nI++) {
             SprMainWall sprMainWall = alSprMainWalls.get(nI);
             if (sprMartian.getBoundingRectangle().overlaps(sprMainWall.getBoundingRectangle())) {
-                sprMartian.OOB();
+                System.out.println("Hit");
+                sprMartian.isOut = true;
                 sprMartian.pickNewDirection();
             }
 
