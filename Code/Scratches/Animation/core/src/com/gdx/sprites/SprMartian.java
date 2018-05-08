@@ -13,7 +13,6 @@ public class SprMartian extends Sprite {
     boolean bFirst = true;
     public Animation arAnimation[];
     Texture txSheet;
-    public TextureRegion trTemp;
     boolean bFlip;
     SpriteSheetAnimator spriteSheetAnimator;
     public Sprite sprTemp;
@@ -22,10 +21,8 @@ public class SprMartian extends Sprite {
     public SprMartian(int nX, int nY, int nW, int nH) {
         super(new Texture(Gdx.files.internal("MartianAni.png")));
         txSheet = new Texture("MartianAni.png");
-        spriteSheetAnimator = new SpriteSheetAnimator(txSheet, 3, 8);
+        spriteSheetAnimator = new SpriteSheetAnimator(txSheet, 3, 8, 1);
         arAnimation = spriteSheetAnimator.animate();
-        trTemp = arAnimation[nPos].getKeyFrame(0, true);
-        trTemp.flip(false, true);
         setSize(nW, nH);
         setPosition(nX, nY);
         nDx = 0;

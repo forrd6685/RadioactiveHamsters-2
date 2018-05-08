@@ -1,24 +1,24 @@
 package com.gdx.animated;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.gdx.sprites.SprHamster;
 import com.gdx.sprites.SprMartian;
 
 import java.util.ArrayList;
 
 public class Animated extends Game {
     SpriteBatch batch;
-    int nFrame, nPos;
-    boolean bMovement, bOut;
+    int nMarFrame, nHamFrame, nPos, nHamDir;
+    boolean bMovement, bOut, bHamsterOutOfBounds;
     OrthographicCamera ocCam;
     SprMartian sprMartian;
+    SprHamster sprHamster;
     ArrayList<SprMartian> arSprMartians = new ArrayList<SprMartian>();
 
     @Override
@@ -29,7 +29,8 @@ public class Animated extends Game {
         batch = new SpriteBatch();
         nPos = 0;
 //        sprMartian = new SprMartian(375, 300, 30, 30);
-        arSprMartians.add(new SprMartian(100, 50, 15, 15));
+        sprHamster = new SprHamster(100, 100, 30, 30);
+        arSprMartians.add(new SprMartian(100, 50, 100, 100));
         arSprMartians.add(new SprMartian(100, 150, 15, 15));
         arSprMartians.add(new SprMartian(100, 250, 15, 15));
         arSprMartians.add(new SprMartian(100,350,15,15));
@@ -43,22 +44,47 @@ public class Animated extends Game {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         batch.setProjectionMatrix(ocCam.combined);
-        nFrame++;
-        //nFrame needs to be n*k where k is the amount of frames per row.
-        if (nFrame > 120) {
-            nFrame = 0;
+        nMarFrame++;
+        nHamFrame++;
+        if (nMarFrame > 8) {
+            nMarFrame = 0;
+        }
+        if (nHamFrame > 12) {
+            nHamFrame = 0;
         }
         for (SprMartian sp : arSprMartians) {
             sp.move();
-            sp.animation(nFrame);
+            sp.animation(nMarFrame);
             bOut = isOutOfBounds(sp);
             if(bOut) {
                 sp.OOB();
             }
             batch.draw(sp.sprTemp, sp.getX(), sp.getY(), sp.getWidth(), sp.getHeight());
         }
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            nHamDir = 1;
+        } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            nHamDir = 2;
+        } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            nHamDir = 3;
+        } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            nHamDir = 4;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+            sprHamster.bGlow = true;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+            sprHamster.bRadioactive = true;
+        }
+        sprHamster.Movement(nHamDir);
+        bHamsterOutOfBounds = isOutOfBounds(sprHamster);
+        if (bHamsterOutOfBounds == true) {
+            sprHamster.OOB();
+        }
+        sprHamster.animation(nHamFrame);
+        sprHamster.sprTemp.draw(batch);
 //        batch.begin();
-//        trTemp = sprMartian.animation(nFrame);
+//        trTemp = sprMartian.animation(nMarFrame);
 //        batch.draw(trTemp, nX, 100);
         batch.end();
     }
