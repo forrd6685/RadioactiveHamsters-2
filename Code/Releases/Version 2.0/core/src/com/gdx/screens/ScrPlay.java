@@ -67,7 +67,7 @@ public class ScrPlay implements Screen, InputProcessor {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.setProjectionMatrix(ocCam.combined);
         for (SprMartian sp : arSprMartians) {
-            sp.move();
+            sp.Movement();
             sprMap.gHitWall(sp);
             sprMap.warpingEdge(sp);
         }
