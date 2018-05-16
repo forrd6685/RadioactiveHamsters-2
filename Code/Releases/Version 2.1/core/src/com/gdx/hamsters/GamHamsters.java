@@ -1,10 +1,7 @@
 package com.gdx.hamsters;
 
 import com.badlogic.gdx.Game;
-import com.gdx.screens.ScrGameOver;
-import com.gdx.screens.ScrPlay;
-import com.gdx.screens.ScrMenu;
-import com.gdx.screens.ScrWin;
+import com.gdx.screens.*;
 
 public class GamHamsters extends Game {
 
@@ -12,6 +9,7 @@ public class GamHamsters extends Game {
     ScrGameOver ScrGameOver;
     ScrMenu ScrMenu;
     ScrWin ScrWin;
+    ScrOptions ScrOptions;
     int nScreen;
     public static final String TITLE = "Radioactive Hamsters (On the Moon!)";
     public static final int SCREENWIDTH = 448;
@@ -28,6 +26,8 @@ public class GamHamsters extends Game {
             setScreen(ScrGameOver);
         } else if (nScreen == 3) {
             setScreen(ScrWin);
+        } else if (nScreen == 4) {
+            setScreen(ScrOptions);
         }
     }
 
@@ -38,6 +38,7 @@ public class GamHamsters extends Game {
         ScrPlay = new ScrPlay(this);
         ScrGameOver = new ScrGameOver(this);
         ScrWin = new ScrWin(this);
+        ScrOptions = new ScrOptions(this);
         updateState(nScreen);
     }
 

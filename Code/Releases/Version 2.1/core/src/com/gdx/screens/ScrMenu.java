@@ -7,25 +7,25 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.gdx.hamsters.GamHamsters;
+import com.gdx.common.SprButton;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.Texture;
 
 public class ScrMenu implements Screen, InputProcessor {
 
-    String sMenu;
-    GamHamsters gamHamster;
-    int nScreen;
-    Sprite sp;
-    Texture tx;
     SpriteBatch batch;
+    GamHamsters gamHamsters;
+    int nScreen;
+    Texture tx;
+    SprButton sprPlayButton, sprOptionsButton;
 
-    public ScrMenu(GamHamsters _gamHamster) {
-        gamHamster = _gamHamster;
+
+    public ScrMenu(GamHamsters _gamHamsters) {
+        gamHamsters = _gamHamsters;
         batch = new SpriteBatch();
-        tx = new Texture("PressEnter.png");
-        sp = new Sprite(tx);
-        sp.setX(Gdx.graphics.getWidth() / 2 - sp.getWidth() / 2);
-        sp.setY(Gdx.graphics.getHeight() / 2 - sp.getHeight() / 2);
+        tx = new Texture("Game Title Screen.jpg");
+        sprPlayButton = new SprButton(50, 75,146,53, "PlayButton.jpg");
+        sprOptionsButton = new SprButton(Gdx.graphics.getWidth() - 196, 75 , 146, 53, "OptionsButton.jpg");
     }
 
     @Override
@@ -38,7 +38,9 @@ public class ScrMenu implements Screen, InputProcessor {
         Gdx.gl.glClearColor(255, 255, 255, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        sp.draw(batch);
+        batch.draw(tx, 0, 0);
+        sprPlayButton.draw(batch);
+        sprOptionsButton.draw(batch);
         batch.end();
     }
 
@@ -64,10 +66,6 @@ public class ScrMenu implements Screen, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-        if (keycode == Input.Keys.ENTER) {
-            gamHamster.updateState(1);
-//        
-        }
         return false;
     }
 
@@ -82,7 +80,17 @@ public class ScrMenu implements Screen, InputProcessor {
     }
 
     @Override
-    public boolean touchDown(int i, int i1, int i2, int i3) {
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if (button == Input.Buttons.LEFT) {
+            screenY = (Gdx.graphics.getHeight() - screenY);
+            if (sprPlayButton.isClicked(screenX, screenY)) {
+                gamHamsters.updateState(1);
+            }
+            if (sprOptionsButton.isClicked(screenX, screenY)) {
+                gamHamsters.updateState(4);
+            }
+
+        }
         return false;
     }
 

@@ -7,60 +7,70 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class SprHamster extends Sprite {
 
-    int nDx, nDy, nCurrentDir, nPos, nGlow, nGlowTime;
-    public boolean isGlowing, isRadioactive;
-    public Animation arAnimation1[], arAnimation2[], arAnimation3[];
-    Texture txSheet1, txSheet2, txSheet3;
-    boolean bFlip;
+    int nDx, nDy, nCurrentDir, nPos, nGlow, nGlowTime, nOrigX, nOrigY, nStatus;
+    public Animation arNormalAni[], arGlowingAni[], arDarkAni[];
+    Animation[][] aAllAnimations;
+    Texture txNormHam, txGlowHam, txDarkHam;
     SpriteSheetAnimator spriteSheetAnimator;
     public Sprite sprTemp;
 
     public SprHamster(int nX, int nY, int nW, int nH) {
-        super(new Texture(Gdx.files.internal("hamster.png")));
-        txSheet1 = new Texture("NormHamAni.png");
-        txSheet2 = new Texture("LRadHamAni.png");
-        txSheet3 = new Texture("DRadHamAni.png");
-        spriteSheetAnimator = new SpriteSheetAnimator(txSheet1, 4, 3, 2);
-        arAnimation1 = spriteSheetAnimator.animate();
-        spriteSheetAnimator = new SpriteSheetAnimator(txSheet2, 4, 3, 2);
-        arAnimation2 = spriteSheetAnimator.animate();
-        spriteSheetAnimator = new SpriteSheetAnimator(txSheet3, 4, 3, 2);
-        arAnimation3 = spriteSheetAnimator.animate();
+        super(new Texture(Gdx.files.internal("NormHamAni.png")));
+        txNormHam = new Texture("NormHamAni.png");
+        txGlowHam = new Texture("LRadHamAni.png");
+        txDarkHam = new Texture("DRadHamAni.png");
+        spriteSheetAnimator = new SpriteSheetAnimator(txNormHam, 4, 3, 2);
+        arNormalAni = spriteSheetAnimator.animate();
+        spriteSheetAnimator = new SpriteSheetAnimator(txGlowHam, 4, 3, 2);
+        arGlowingAni = spriteSheetAnimator.animate();
+        spriteSheetAnimator = new SpriteSheetAnimator(txDarkHam, 4, 3, 2);
+        arDarkAni = spriteSheetAnimator.animate();
+        aAllAnimations = new Animation[3][12];
+        aAllAnimations[0] = arNormalAni;
+        aAllAnimations[1] = arDarkAni;
+        aAllAnimations[2] = arGlowingAni;
         setPosition(nX, nY);
         setSize(nW, nH);
+        nOrigX = nX;
+        nOrigY = nY;
+        nGlowTime = nGlow;
         setFlip(false, true);
     }
 
-    public Sprite animation(int nFrame) {
-        if(isRadioactive) {
-            if (isGlowing) {
-                nGlowTime =  (int) (Math.random() * 40 + 1);
-                sprTemp = (Sprite) arAnimation2[nPos].getKeyFrame(nFrame, true);
-                if (nGlow >= nGlowTime) {
-                    nGlow = 0;
-                    isGlowing = false;
-                } else {
-                    nGlow++;
+    public void reset() {
+        nCurrentDir = 0;
+        nDx = 0;
+        nDy = 0;
+        nPos = 0;
+        nGlow = 0;
+        nGlowTime = 0;
+        nStatus = 0;
+        setPosition(nOrigX, nOrigY);
+    }
 
-                }
-            } else {
-                sprTemp = (Sprite) arAnimation3[nPos].getKeyFrame(nFrame, true);
-            }
-        } else {
-            sprTemp = (Sprite) arAnimation1[nPos].getKeyFrame(nFrame, true);
+    public void statusUpdate(int _nStatus) {
+        nStatus = _nStatus;
+        if (nStatus == 2) {
+            nGlowTime = (int) (Math.random() * 30 + 10);
         }
+    }
+
+    public void animation(int nFrame) {
+        if (nGlow > nGlowTime) {
+            nGlow = 0;
+            nStatus = 1;
+        } else if (nGlow == nGlowTime) {
+        } else {
+            nGlow++;
+        }
+        sprTemp = (Sprite) aAllAnimations[nStatus][nPos].getKeyFrame(nFrame, true);
         sprTemp.setPosition(getX(), getY());
         sprTemp.setSize(getWidth(), getHeight());
         sprTemp.setFlip(false, true);
-        if (bFlip) {
-            sprTemp.setFlip(true, true);
-        }
-        return sprTemp;
     }
 
-
-    //Thanks Abdullah
     public void tryMove(int nNewDir, SprMap map) {
+        //Thanks Abdullah
         if (nNewDir == 1) {
             nDy = -2;
             nDx = 0;
@@ -82,11 +92,9 @@ public class SprHamster extends Sprite {
     }
 
     public void move(int nNewDir, SprMap map) {
-
         if (nNewDir != nCurrentDir) {
             tryMove(nNewDir, map);
         }
-
         if (nCurrentDir == 1) {
             nDy = -2;
             nDx = 0;
