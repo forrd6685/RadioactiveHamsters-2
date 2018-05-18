@@ -24,7 +24,7 @@ public class ScrMenu implements Screen, InputProcessor {
         gamHamsters = _gamHamsters;
         batch = new SpriteBatch();
         tx = new Texture("Game Title Screen.jpg");
-        sprPlayButton = new SprButton(50, 75,146,53, "PlayButton.jpg");
+        sprPlayButton = new SprButton(50, 75, 146,53, "PlayButton.jpg");
         sprOptionsButton = new SprButton(Gdx.graphics.getWidth() - 196, 75 , 146, 53, "OptionsButton.jpg");
     }
 
@@ -84,7 +84,7 @@ public class ScrMenu implements Screen, InputProcessor {
         if (button == Input.Buttons.LEFT) {
             screenY = (Gdx.graphics.getHeight() - screenY);
             if (sprPlayButton.isClicked(screenX, screenY)) {
-                gamHamsters.updateState(1);
+                gamHamsters.updateState(5);
             }
             if (sprOptionsButton.isClicked(screenX, screenY)) {
                 gamHamsters.updateState(4);

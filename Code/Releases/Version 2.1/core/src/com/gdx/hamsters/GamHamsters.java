@@ -10,6 +10,7 @@ public class GamHamsters extends Game {
     ScrMenu ScrMenu;
     ScrWin ScrWin;
     ScrOptions ScrOptions;
+    ScrPlayers ScrPlayers;
     int nScreen;
     public static final String TITLE = "Radioactive Hamsters (On the Moon!)";
     public static final int SCREENWIDTH = 448;
@@ -28,6 +29,8 @@ public class GamHamsters extends Game {
             setScreen(ScrWin);
         } else if (nScreen == 4) {
             setScreen(ScrOptions);
+        } else if (nScreen == 5) {
+            setScreen(ScrPlayers);
         }
     }
 
@@ -39,6 +42,7 @@ public class GamHamsters extends Game {
         ScrGameOver = new ScrGameOver(this);
         ScrWin = new ScrWin(this);
         ScrOptions = new ScrOptions(this);
+        ScrPlayers = new ScrPlayers(this);
         updateState(nScreen);
     }
 
