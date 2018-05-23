@@ -12,6 +12,7 @@ public class SprHamster extends Sprite {
     Animation[][] aAllAnimations;
     Texture txNormHam, txGlowHam, txDarkHam;
     SpriteSheetAnimator spriteSheetAnimator;
+    boolean bRadioactive;
     public Sprite sprTemp;
 
     public SprHamster(int nX, int nY, int nW, int nH) {
@@ -45,6 +46,7 @@ public class SprHamster extends Sprite {
         nGlow = 0;
         nGlowTime = 0;
         nStatus = 0;
+        bRadioactive = false;
         setPosition(nOrigX, nOrigY);
     }
 
@@ -86,7 +88,7 @@ public class SprHamster extends Sprite {
         }
         float fX = getX() + nDx;
         float fY = getY() + nDy;
-        if (!map.hHitWall(this, fX, fY)) {
+        if (!map.bCheckHitWall(this, fX, fY, true)) {
             nCurrentDir = nNewDir;
         }
     }

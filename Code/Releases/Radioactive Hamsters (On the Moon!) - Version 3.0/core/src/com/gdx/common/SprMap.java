@@ -58,7 +58,7 @@ public class SprMap extends Sprite {
         for (int nI = 0; nI < alSprMainWalls.size(); nI++) {
             SprMainWall sprMainWall = alSprMainWalls.get(nI);
             if (sprMartian.getBoundingRectangle().overlaps(sprMainWall.getBoundingRectangle())) {
-                sprMartian.OOB();
+                sprMartian.outOfBounds();
             }
 
         }
@@ -84,9 +84,20 @@ public class SprMap extends Sprite {
         return false;
     }
 
-    public boolean hHitWall(SprHamster sprHamster, float x, float y) {
+    public void pHitWall(SprPlayableMartian sprPMartian) {
+        //    Ghost
+        for (int nI = 0; nI < alSprMainWalls.size(); nI++) {
+            SprMainWall sprMainWall = alSprMainWalls.get(nI);
+            if (sprPMartian.getBoundingRectangle().overlaps(sprMainWall.getBoundingRectangle())) {
+                sprPMartian.outOfBounds();
+            }
+
+        }
+    }
+
+    public boolean bCheckHitWall(Sprite spr, float x, float y, boolean bHam) {
         //    Hamster Check
-        Rectangle r1 = sprHamster.getBoundingRectangle();
+        Rectangle r1 = spr.getBoundingRectangle();
         r1.setX(x);
         r1.setY(y);
         for (int nI = 0; nI < alSprMainWalls.size(); nI++) {
@@ -95,10 +106,12 @@ public class SprMap extends Sprite {
                 return true;
             }
         }
-        for (int nI = 0; nI < alSprGhostHouse.size(); nI++) {
-            SprGhostHouseWall sprGhostWall = alSprGhostHouse.get(nI);
-            if (r1.overlaps(sprGhostWall.getBoundingRectangle())) {
-                return true;
+        if(bHam) {
+            for (int nI = 0; nI < alSprGhostHouse.size(); nI++) {
+                SprGhostHouseWall sprGhostWall = alSprGhostHouse.get(nI);
+                if (r1.overlaps(sprGhostWall.getBoundingRectangle())) {
+                    return true;
+                }
             }
         }
         return false;
@@ -106,9 +119,10 @@ public class SprMap extends Sprite {
 
     public void warpingEdge(Sprite spr1) {
         float fX = spr1.getX(), fScreenWidth = Gdx.graphics.getWidth();
-        if (fX + spr1.getWidth() < 0) {
+        float fWidth = spr1.getWidth()/2;
+        if (fX + fWidth < 0) {
             spr1.setX(fScreenWidth);
-        } else if (fX > fScreenWidth) {
+        } else if (fX - fWidth > fScreenWidth) {
             spr1.setX(0);
         }
     }

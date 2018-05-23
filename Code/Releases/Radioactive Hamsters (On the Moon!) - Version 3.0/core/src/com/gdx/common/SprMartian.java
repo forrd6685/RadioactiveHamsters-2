@@ -29,20 +29,22 @@ public class SprMartian extends Sprite {
         nDy = 0;
         nCurrentDir = -1;
     }
+
     public void animation(int nFrame) {
         sprTemp = (Sprite) arAnimation[nPos].getKeyFrame(nFrame, true);
 //        sprTemp = new Sprite(sprTemp);
         sprTemp.setFlip(false, true);
-        if(bFlip) {
+        if (bFlip) {
             sprTemp.setFlip(true, true);
         }
     }
 
-    public void reset(){
+    public void reset() {
         setPosition(nOrigX, nOrigY);
         nCurrentDir = -1;
-        bFirst=false;
+        bFirst = false;
     }
+
     public void pickNewDirection() {
         if (bFirst) {
             if (Math.random() < 0.5) {
@@ -103,7 +105,7 @@ public class SprMartian extends Sprite {
         setY(getY() + nDy);
     }
 
-    public void OOB() {
+    public void outOfBounds() {
         setX(getX() - nDx);
         setY(getY() - nDy);
         pickNewDirection();

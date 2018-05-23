@@ -18,7 +18,7 @@ public class SpriteSheetAnimator {
         this.nRows = nRows;
         this.nColumns = nColumns;
         arAnimation = new Animation[nRows];
-        this.fChangeRate = 2;
+        this.fChangeRate = fChangeRate;
     }
     public Animation[] animate () {
         fW = TextureSheet.getWidth() / nColumns;

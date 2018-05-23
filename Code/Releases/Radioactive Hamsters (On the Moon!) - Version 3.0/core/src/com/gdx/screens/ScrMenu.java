@@ -5,34 +5,27 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.gdx.hamsters.GamHamsters;
 import com.gdx.common.SprButton;
-import com.gdx.common.SpriteSheetAnimator;
-import com.gdx.common.AniMoonExplode;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.Texture;
 
-public class ScrWin implements Screen, InputProcessor {
+public class ScrMenu implements Screen, InputProcessor {
 
     SpriteBatch batch;
     GamHamsters gamHamsters;
-    Texture txWin;
-    Sprite sprTemp;
-    SprButton sprButtonBack;
-    int nI;
-    AniMoonExplode aniMoonExplode;
+    int nScreen;
+    Texture tx;
+    SprButton sprPlayButton, sprOptionsButton;
 
 
-    public ScrWin(GamHamsters _gamHamsters) {
-        Gdx.input.setInputProcessor(this);
-        batch = new SpriteBatch();
-        aniMoonExplode = new AniMoonExplode(0, 0);
-        txWin = new Texture("win.gif");
-        sprButtonBack = new SprButton(0, 0, 50, 100, "Back.png");
+    public ScrMenu(GamHamsters _gamHamsters) {
         gamHamsters = _gamHamsters;
+        batch = new SpriteBatch();
+        tx = new Texture("Game Title Screen.jpg");
+        sprPlayButton = new SprButton(50, 75, 146,53, "PlayButton.jpg");
+        sprOptionsButton = new SprButton(Gdx.graphics.getWidth() - 196, 75 , 146, 53, "OptionsButton.jpg");
     }
 
     @Override
@@ -40,16 +33,14 @@ public class ScrWin implements Screen, InputProcessor {
         Gdx.input.setInputProcessor(this);
     }
 
-    public void render(float delta) {
+    @Override
+    public void render(float f) {
+        Gdx.gl.glClearColor(255, 255, 255, 0);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        sprTemp = aniMoonExplode.animate();
-        sprTemp.draw(batch);
-        if(nI < 60) {
-            nI++;
-        } else {
-            batch.draw(txWin, Gdx.graphics.getWidth() / 2 - 70, Gdx.graphics.getHeight() / 2 - 100, 150, 150);
-            sprButtonBack.draw(batch);
-        }
+        batch.draw(tx, 0, 0);
+        sprPlayButton.draw(batch);
+        sprOptionsButton.draw(batch);
         batch.end();
     }
 
@@ -92,11 +83,13 @@ public class ScrWin implements Screen, InputProcessor {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (button == Input.Buttons.LEFT) {
             screenY = (Gdx.graphics.getHeight() - screenY);
-            if (sprButtonBack.isClicked(screenX, screenY)) {
-                aniMoonExplode.reset();
-                nI=0;
-                gamHamsters.updateState(0);
+            if (sprPlayButton.isClicked(screenX, screenY)) {
+                gamHamsters.updateState(5);
             }
+            if (sprOptionsButton.isClicked(screenX, screenY)) {
+                gamHamsters.updateState(4);
+            }
+
         }
         return false;
     }

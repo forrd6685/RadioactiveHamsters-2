@@ -14,13 +14,14 @@ import com.gdx.common.SprHamster;
 import com.gdx.common.SprMap;
 import com.gdx.common.SprNuke;
 import com.gdx.hamsters.GamHamsters;
+import com.gdx.common.SprPlayableMartian;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class ScrPlay implements Screen, InputProcessor {
     SpriteBatch batch;
-    int nGhostdX, nGhostdY, nWantMove, nX1, nY1, nMarFrame, nHamFrame, nY;
+    int nGhostdX, nGhostdY, nWantMoveHam, nWantMoveMar, nMarFrame, nHamFrame, nY;
     boolean bMovement, bIsHit, bRadioactive;
     OrthographicCamera ocCam;
     ArrayList<SprMartian> arSprMartians = new ArrayList<SprMartian>();
@@ -29,6 +30,7 @@ public class ScrPlay implements Screen, InputProcessor {
     SprMap sprMap;
     SprNuke sprNuke;
     Texture tx;
+    SprPlayableMartian sprPMart;
     Sprite sprBackground;
 
     public ScrPlay(GamHamsters _gamhamsters) {
@@ -39,13 +41,12 @@ public class ScrPlay implements Screen, InputProcessor {
         nGhostdX = 0;
         nGhostdY = 0;
         sprMap = new SprMap();
-        nY=229;
+        nY = 229;
         sprNuke = new SprNuke(212, 232, 20, 20);
         sprHamster = new SprHamster(215, 369, 15, 15);
         arSprMartians.add(new SprMartian(215, 232, 15, 15));
         arSprMartians.add(new SprMartian(215, 231, 15, 15));
         arSprMartians.add(new SprMartian(215, 230, 15, 15));
-        arSprMartians.add(new SprMartian(215, 229, 15, 15));
         ocCam = new OrthographicCamera();
         tx = new Texture("background1.jpg");
         sprBackground = new Sprite(tx);
@@ -57,9 +58,18 @@ public class ScrPlay implements Screen, InputProcessor {
         for (SprMartian sp : arSprMartians) {
             sp.reset();
         }
-        sprHamster.reset();
         bRadioactive = false;
-        nWantMove = 0;
+        if (gamHamsters.bMultiplayer) {
+            sprPMart = new SprPlayableMartian(215, 229, 15, 15);
+            sprPMart.reset();
+        } else {
+            arSprMartians.add(new SprMartian(215, 229, 15, 15));
+        }
+        for (SprMartian sp : arSprMartians) {
+            sp.reset();
+        }
+        sprHamster.reset();
+        nWantMoveHam = 0;
         sprNuke.bShow = false;
         try {
             sprMap.mapMaker();
@@ -96,11 +106,22 @@ public class ScrPlay implements Screen, InputProcessor {
             sprMap.gHitWall(sp);
             sprMap.warpingEdge(sp);
         }
-        sprHamster.move(nWantMove, sprMap);
+        if (gamHamsters.bMultiplayer) {
+            sprPMart.move(nWantMoveMar, sprMap);
+            sprMap.pHitWall(sprPMart);
+            sprMap.warpingEdge(sprPMart);
+        }
+        sprHamster.move(nWantMoveHam, sprMap);
         sprMap.hHitWall(sprHamster);
         sprMap.warpingEdge(sprHamster);
         for (SprMartian sp : arSprMartians) {
             bIsHit = isHit(sprHamster, sp);
+            if (bIsHit) {
+                gamHamsters.updateState(2);
+            }
+        }
+        if (gamHamsters.bMultiplayer) {
+            bIsHit = isHit(sprHamster, sprPMart);
             if (bIsHit) {
                 gamHamsters.updateState(2);
             }
@@ -113,6 +134,10 @@ public class ScrPlay implements Screen, InputProcessor {
         batch.draw(sprBackground, 0, 0);
         sprHamster.animation(nHamFrame);
         sprHamster.sprTemp.draw(batch);
+        if (gamHamsters.bMultiplayer) {
+            sprPMart.animation(nMarFrame);
+            batch.draw(sprPMart.sprTemp, sprPMart.getX(), sprPMart.getY(), sprPMart.getWidth(), sprPMart.getHeight());
+        }
         for (SprMartian sp : arSprMartians) {
             sp.animation(nMarFrame);
             batch.draw(sp.sprTemp, sp.getX(), sp.getY(), sp.getWidth(), sp.getHeight());
@@ -120,9 +145,10 @@ public class ScrPlay implements Screen, InputProcessor {
         if (sprNuke.bShow) {
             sprNuke.draw(batch);
         }
-        if(bRadioactive) {
+        if (sprMap.alSprPellets.isEmpty()) {
             for (int nI = 0; nI < sprMap.alSprGhostHouse.size(); nI++) {
                 sprMap.alSprGhostHouse.remove(nI);
+                bRadioactive = true;
             }
             sprNuke.bShow = true;
         }
@@ -140,7 +166,7 @@ public class ScrPlay implements Screen, InputProcessor {
             }
             if (sprMap.alSprPellets.isEmpty()) {
                 sprHamster.statusUpdate(1);
-                bRadioactive=true;
+
             }
         }
 //        for (int nI = 0; nI < sprMap.alSprMainWalls.size(); nI++) {
@@ -179,16 +205,28 @@ public class ScrPlay implements Screen, InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         bMovement = true;
-        if (keycode == Input.Keys.W || keycode == Input.Keys.UP) {
-            nWantMove = 1;
-        } else if (keycode == Input.Keys.D || keycode == Input.Keys.RIGHT) {
-            nWantMove = 2;
-        } else if (keycode == Input.Keys.S || keycode == Input.Keys.DOWN) {
-            nWantMove = 3;
-        } else if (keycode == Input.Keys.A || keycode == Input.Keys.LEFT) {
-            nWantMove = 4;
+        if (keycode == Input.Keys.W) {
+            nWantMoveHam = 1;
+        } else if (keycode == Input.Keys.D) {
+            nWantMoveHam = 2;
+        } else if (keycode == Input.Keys.S) {
+            nWantMoveHam = 3;
+        } else if (keycode == Input.Keys.A) {
+            nWantMoveHam = 4;
         }
-        if(keycode == Input.Keys.ALT_LEFT) {
+
+        if (gamHamsters.bMultiplayer) {
+            if (keycode == Input.Keys.UP) {
+                nWantMoveMar = 1;
+            } else if (keycode == Input.Keys.RIGHT) {
+                nWantMoveMar = 2;
+            } else if (keycode == Input.Keys.DOWN) {
+                nWantMoveMar = 3;
+            } else if (keycode == Input.Keys.LEFT) {
+                nWantMoveMar = 4;
+            }
+        }
+        if (keycode == Input.Keys.ALT_RIGHT) {
             for (int nI = 0; nI < sprMap.alSprPellets.size(); nI++) {
                 sprMap.alSprPellets.get(nI).isEaten = true;
             }
