@@ -17,10 +17,10 @@ public class SprMap extends Sprite {
     public Texture PelletTexture = new Texture("dot2.png");
     public Texture MainWallTexture = new Texture("testwall.jpg");
     public Texture GhostWallTexture = new Texture("testwall2.jpg");
-    public int nScreenWidth = Gdx.graphics.getWidth();
-    public int nScreenHeight = Gdx.graphics.getHeight();
-    public int nWidth = nScreenWidth / 27;
-    public int nHeight = nScreenHeight / 30;
+    public int nScreenWidth;
+    public int nScreenHeight;
+    public int nWidth;
+    public int nHeight;
     Scanner sIn;
 
     public SprMap() {

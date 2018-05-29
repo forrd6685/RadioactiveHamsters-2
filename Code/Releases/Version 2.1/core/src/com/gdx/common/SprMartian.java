@@ -2,15 +2,12 @@ package com.gdx.common;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.gdx.common.SpriteSheetAnimator;
 
 public class SprMartian extends Sprite {
 
-    int nDx, nDy, nCurrentDir, nPos;
+    int nDx, nDy, nCurrentDir, nPos, nOrigX, nOrigY;
     boolean bFirst = true;
     public Animation arAnimation[];
     Texture txSheet;
@@ -26,20 +23,26 @@ public class SprMartian extends Sprite {
         arAnimation = spriteSheetAnimator.animate();
         setSize(nW, nH);
         setPosition(nX, nY);
+        nOrigX = nX;
+        nOrigY = nY;
         nDx = 0;
         nDy = 0;
         nCurrentDir = -1;
     }
-    public Sprite animation(int nFrame) {
+    public void animation(int nFrame) {
         sprTemp = (Sprite) arAnimation[nPos].getKeyFrame(nFrame, true);
-//        sprTemp = new Sprite(trTemp);
+//        sprTemp = new Sprite(sprTemp);
         sprTemp.setFlip(false, true);
         if(bFlip) {
             sprTemp.setFlip(true, true);
         }
-        return sprTemp;
     }
 
+    public void reset(){
+        setPosition(nOrigX, nOrigY);
+        nCurrentDir = -1;
+        bFirst=false;
+    }
     public void pickNewDirection() {
         if (bFirst) {
             if (Math.random() < 0.5) {

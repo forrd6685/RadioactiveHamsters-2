@@ -20,8 +20,8 @@ import java.util.ArrayList;
 
 public class ScrPlay implements Screen, InputProcessor {
     SpriteBatch batch;
-    int nGhostdX, nGhostdY, nWantMove, nX1, nY1, nMarFrame, nHamFrame;
-    boolean bMovement, bIsHit;
+    int nGhostdX, nGhostdY, nWantMove, nX1, nY1, nMarFrame, nHamFrame, nY;
+    boolean bMovement, bIsHit, bRadioactive;
     OrthographicCamera ocCam;
     ArrayList<SprMartian> arSprMartians = new ArrayList<SprMartian>();
     SprHamster sprHamster;
@@ -38,14 +38,15 @@ public class ScrPlay implements Screen, InputProcessor {
         bMovement = false;
         nGhostdX = 0;
         nGhostdY = 0;
-        ocCam = new OrthographicCamera();
         sprMap = new SprMap();
-        sprNuke = new SprNuke(215, 232, 25, 25);
+        nY=229;
+        sprNuke = new SprNuke(212, 232, 20, 20);
         sprHamster = new SprHamster(215, 369, 15, 15);
         arSprMartians.add(new SprMartian(215, 232, 15, 15));
         arSprMartians.add(new SprMartian(215, 231, 15, 15));
         arSprMartians.add(new SprMartian(215, 230, 15, 15));
         arSprMartians.add(new SprMartian(215, 229, 15, 15));
+        ocCam = new OrthographicCamera();
         tx = new Texture("background1.jpg");
         sprBackground = new Sprite(tx);
         gamHamsters = _gamhamsters;
@@ -53,6 +54,13 @@ public class ScrPlay implements Screen, InputProcessor {
 
     @Override
     public void show() {
+        for (SprMartian sp : arSprMartians) {
+            sp.reset();
+        }
+        sprHamster.reset();
+        bRadioactive = false;
+        nWantMove = 0;
+        sprNuke.bShow = false;
         try {
             sprMap.mapMaker();
         } catch (FileNotFoundException e) {
@@ -62,6 +70,7 @@ public class ScrPlay implements Screen, InputProcessor {
         ocCam.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         ocCam.update();
         Gdx.input.setInputProcessor(this);
+
     }
 
     @Override
@@ -69,8 +78,10 @@ public class ScrPlay implements Screen, InputProcessor {
         Gdx.gl.glClearColor(255, 255, 255, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.setProjectionMatrix(ocCam.combined);
-        if((int) (Math.random() * 30 + 1) == 1) {
-            sprHamster.isGlowing=true;
+        if(bRadioactive) {
+            if ((int) (Math.random() * 30 + 1) == 1) {
+                sprHamster.statusUpdate(2);
+            }
         }
         nMarFrame++;
         nHamFrame++;
@@ -99,7 +110,7 @@ public class ScrPlay implements Screen, InputProcessor {
             gamHamsters.updateState(3);
         }
         batch.begin();
-        batch.draw(sprBackground, 0, 0, GamHamsters.SCREENWIDTH, GamHamsters.SCREENHEIGHT);
+        batch.draw(sprBackground, 0, 0);
         sprHamster.animation(nHamFrame);
         sprHamster.sprTemp.draw(batch);
         for (SprMartian sp : arSprMartians) {
@@ -109,6 +120,13 @@ public class ScrPlay implements Screen, InputProcessor {
         if (sprNuke.bShow) {
             sprNuke.draw(batch);
         }
+        if(bRadioactive) {
+            for (int nI = 0; nI < sprMap.alSprGhostHouse.size(); nI++) {
+                sprMap.alSprGhostHouse.remove(nI);
+            }
+            sprNuke.bShow = true;
+        }
+
         sprMap.draw(batch);
         for (int nI = 0; nI < sprMap.alSprPellets.size(); nI++) {
             if (isHit(sprHamster, sprMap.alSprPellets.get(nI))) {
@@ -121,11 +139,8 @@ public class ScrPlay implements Screen, InputProcessor {
                 sprMap.alSprPellets.get(nI).isEaten = false;
             }
             if (sprMap.alSprPellets.isEmpty()) {
-                sprHamster.isRadioactive = true;
-                for (int nJ = 0; nJ < sprMap.alSprGhostHouse.size(); nJ++) {
-                    sprMap.alSprGhostHouse.remove(nJ);
-                }
-                sprNuke.bShow = true;
+                sprHamster.statusUpdate(1);
+                bRadioactive=true;
             }
         }
 //        for (int nI = 0; nI < sprMap.alSprMainWalls.size(); nI++) {
@@ -172,6 +187,11 @@ public class ScrPlay implements Screen, InputProcessor {
             nWantMove = 3;
         } else if (keycode == Input.Keys.A || keycode == Input.Keys.LEFT) {
             nWantMove = 4;
+        }
+        if(keycode == Input.Keys.ALT_LEFT) {
+            for (int nI = 0; nI < sprMap.alSprPellets.size(); nI++) {
+                sprMap.alSprPellets.get(nI).isEaten = true;
+            }
         }
         return false;
     }
