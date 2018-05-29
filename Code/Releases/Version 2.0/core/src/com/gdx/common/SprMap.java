@@ -21,6 +21,10 @@ public class SprMap extends Sprite {
     public int nScreenHeight = Gdx.graphics.getHeight();
     public int nWidth = nScreenWidth / 27;
     public int nHeight = nScreenHeight / 30;
+    public Rectangle rectangle;
+
+
+
     Scanner sIn;
 
     public SprMap() {
@@ -28,10 +32,12 @@ public class SprMap extends Sprite {
         setPosition(0, 0);
         setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         setFlip(false, true);
+        rectangle = new Rectangle(277, 233, 110, 75);
     }
     public void mapMaker() throws FileNotFoundException {
 //        0 is pellets, 1 is walls, 2 is ghost house, 3 is empty.
 //        2D Array taken from: https://github.com/Code-Bullet/PacmanGame/blob/master/PacmanGame/PacmanGame.pde
+
         sIn = new Scanner(new FileReader("MapArray.txt"));
         int[][] nTileMap = new int[31][28];
         for (int nY = 0; nY < 31; nY++) {
@@ -53,13 +59,20 @@ public class SprMap extends Sprite {
         for (int nI = 0; nI < alSprMainWalls.size(); nI++) {
             SprMainWall sprMainWall = alSprMainWalls.get(nI);
             if (sprMartian.getBoundingRectangle().overlaps(sprMainWall.getBoundingRectangle())) {
-                System.out.println("Hit");
                 sprMartian.isOut = true;
-                sprMartian.pickNewDirection();
             }
 
         }
-    }
+           for (int nJ = 0; nJ < alSprGhostHouse.size(); nJ++) {
+               SprGhostHouseWall sprGhostHouseWall = alSprGhostHouse.get(nJ);
+                if (!sprMartian.getBoundingRectangle().overlaps(sprGhostHouseWall.getBoundingRectangle())) {
+                    sprMartian.isInHouse = false;
+                }
+
+
+            }
+        }
+
 
     public boolean hHitWall(SprHamster sprHamster) {
         //    Hamster Actual
@@ -68,7 +81,6 @@ public class SprMap extends Sprite {
             if (sprHamster.getBoundingRectangle().overlaps(sprMainWall.getBoundingRectangle())) {
                 sprHamster.outOfBounds();
                 return true;
-
             }
         }
         for (int nI = 0; nI < alSprGhostHouse.size(); nI++) {
@@ -77,6 +89,7 @@ public class SprMap extends Sprite {
                 sprHamster.outOfBounds();
                 return true;
             }
+
         }
         return false;
     }

@@ -21,6 +21,7 @@ public class ScrMain implements Screen, InputProcessor {
         sprButtonPat = new SprButton(100, 100, 300, 300, "button2.jpg");
         sprButtonExp = new SprButton(100, 100, 100, 10, "button3.png");
         buttons = _buttons;
+        System.out.println("Devin is amazing and if brad doesn't see this he is dumb");
     }
 
     @Override
