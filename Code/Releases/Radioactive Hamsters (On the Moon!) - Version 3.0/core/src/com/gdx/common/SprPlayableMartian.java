@@ -24,8 +24,14 @@ public class SprPlayableMartian extends Sprite {
         nOrigY = nY;
     }
 
+    public void movement(int move, SprMap sprMap){
+        move(move, sprMap);
+        sprMap.pHitWall(this);
+        sprMap.warpingEdge(this);
+    }
+
     public void reset() {
-        nCurrentDir = -1;
+        nCurrentDir = 0;
         nDx = 0;
         nDy = 0;
         nPos = 2;

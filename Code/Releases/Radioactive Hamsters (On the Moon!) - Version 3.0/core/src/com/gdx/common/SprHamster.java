@@ -50,14 +50,28 @@ public class SprHamster extends Sprite {
         setPosition(nOrigX, nOrigY);
     }
 
+    public void movement(int move, SprMap sprMap, int nFrame) {
+        move(move, sprMap);
+        sprMap.hHitWall(this);
+        sprMap.warpingEdge(this);
+        animation(nFrame);
+    }
+
     public void statusUpdate(int _nStatus) {
         nStatus = _nStatus;
         if (nStatus == 2) {
             nGlowTime = (int) (Math.random() * 30 + 10);
+        } else if (nStatus == 1) {
+            bRadioactive = true;
         }
     }
 
     public void animation(int nFrame) {
+        if (bRadioactive) {
+            if ((int) (Math.random() * 30 + 1) == 1) {
+                statusUpdate(2);
+            }
+        }
         if (nGlow > nGlowTime) {
             nGlow = 0;
             nStatus = 1;

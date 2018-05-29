@@ -30,6 +30,13 @@ public class SprMartian extends Sprite {
         nCurrentDir = -1;
     }
 
+    public void movement(SprMap sprMap, int nFrame){
+        move();
+        sprMap.gHitWall(this);
+        sprMap.warpingEdge(this);
+        animation(nFrame);
+    }
+
     public void animation(int nFrame) {
         sprTemp = (Sprite) arAnimation[nPos].getKeyFrame(nFrame, true);
 //        sprTemp = new Sprite(sprTemp);
