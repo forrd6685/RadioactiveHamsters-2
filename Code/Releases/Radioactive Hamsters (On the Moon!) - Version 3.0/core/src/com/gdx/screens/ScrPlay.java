@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class ScrPlay implements Screen, InputProcessor {
     SpriteBatch batch;
     int nGhostdX, nGhostdY, nWantMoveHam, nWantMoveMar, nMarFrame, nHamFrame, nY, nArrowMove;
-    boolean bMovement, bIsHit;
+    boolean bMovement, bIsHit, bExists;
     OrthographicCamera ocCam;
     ArrayList<SprMartian> arSprMartians = new ArrayList<SprMartian>();
     SprHamster sprHamster;
@@ -194,7 +194,6 @@ public class ScrPlay implements Screen, InputProcessor {
         nWantMoveHam = 0;
         sprNuke.bShow = false;
     }
-
 
     @Override
     public void resize(int i, int i1) {

@@ -29,7 +29,6 @@ public class SprPlayableMartian extends Sprite {
         sprMap.pHitWall(this);
         sprMap.warpingEdge(this);
     }
-
     public void reset() {
         nCurrentDir = 0;
         nDx = 0;

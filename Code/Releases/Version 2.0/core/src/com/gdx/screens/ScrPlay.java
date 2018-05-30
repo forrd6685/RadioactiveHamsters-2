@@ -4,14 +4,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.gdx.common.SprMartian;
 import com.gdx.common.SprHamster;
 import com.gdx.common.SprMap;
+import com.gdx.common.SprSquare;
 import com.gdx.hamsters.GamHamsters;
 
 import java.io.FileNotFoundException;
@@ -23,9 +26,11 @@ public class ScrPlay implements Screen, InputProcessor {
     boolean bMovement, bIsHit;
     OrthographicCamera ocCam;
     ArrayList<SprMartian> arSprMartians = new ArrayList<SprMartian>();
+    SprSquare squareL, squareR, squareT, squareB;
     SprHamster sprHamster;
     GamHamsters gamHamsters;
     SprMap sprMap;
+    ShapeRenderer shapeRenderer;
     Texture tx;
     Sprite sprBackground;
 
@@ -40,12 +45,13 @@ public class ScrPlay implements Screen, InputProcessor {
         sprMap = new SprMap();
         sprHamster = new SprHamster(215, 369, 15, 15);
         arSprMartians.add(new SprMartian(215, 232, 15, 15));
-        arSprMartians.add(new SprMartian(215, 231, 15, 15));
-        arSprMartians.add(new SprMartian(215, 230, 15, 15));
-        arSprMartians.add(new SprMartian(215, 229, 15, 15));
+       // arSprMartians.add(new SprMartian(215, 231, 15, 15));
+       // arSprMartians.add(new SprMartian(215, 230, 15, 15));
+       // arSprMartians.add(new SprMartian(215, 229, 15, 15));
         tx = new Texture("background1.jpg");
         sprBackground = new Sprite(tx);
         gamHamsters = _gamhamsters;
+        shapeRenderer = new ShapeRenderer();
     }
 
     @Override
@@ -74,18 +80,25 @@ public class ScrPlay implements Screen, InputProcessor {
         sprHamster.move(nWantMove, sprMap);
         sprMap.hHitWall(sprHamster);
         sprMap.warpingEdge(sprHamster);
-        for (SprMartian sp : arSprMartians) {
-            bIsHit = isHit(sprHamster, sp);
-            if (bIsHit) {
-                gamHamsters.updateState(2);
-            }
-        }
+      //  for (SprMartian sp : arSprMartians) {
+        //    bIsHit = isHit(sprHamster, sp);
+        //    if (bIsHit) {
+        //        gamHamsters.updateState(2);
+        //    }
+      //  }
+
         batch.begin();
-        batch.draw(sprBackground, 0,0, GamHamsters.SCREENWIDTH, GamHamsters.SCREENHEIGHT);
+        batch.draw(sprBackground, 0,0);
+
         sprHamster.draw(batch);
         for (SprMartian sp : arSprMartians) {
             sp.draw(batch);
-        }
+            sp.squareL.draw(batch);
+            sp.squareR.draw(batch);
+            sp.squareT.draw(batch);
+            sp.squareB.draw(batch);
+         }
+
         sprMap.draw(batch);
         for (int nI = 0; nI < sprMap.alSprPellets.size(); nI++) {
             if (isHit(sprHamster, sprMap.alSprPellets.get(nI))) {
@@ -102,13 +115,17 @@ public class ScrPlay implements Screen, InputProcessor {
             }
 
         }
-//        for (int nI = 0; nI < sprMap.alSprMainWalls.size(); nI++) {
-//            sprMap.alSprMainWalls.get(nI).draw(batch);
-//        }
-//        for (int nI = 0; nI < sprMap.alSprGhostHouse.size(); nI++) {
-//            sprMap.alSprGhostHouse.get(nI).draw(batch);
-//        }
+//      for (int nI = 0; nI < sprMap.alSprMainWalls.size(); nI++) {
+ //         sprMap.alSprMainWalls.get(nI).draw(batch);
+ //       }
+ //      for (int nI = 0; nI < sprMap.alSprGhostHouse.size(); nI++) {
+  //          sprMap.alSprGhostHouse.get(nI).draw(batch);
+  //    }
         batch.end();
+       // shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+       // shapeRenderer.setColor(Color.RED);
+       // shapeRenderer.rect(168, 225, 110, 75);
+       // shapeRenderer.end();
     }
 
     public boolean isHit(Sprite spr1, Sprite spr2) {
