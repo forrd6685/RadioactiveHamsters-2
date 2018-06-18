@@ -21,7 +21,7 @@ public class ScrGameOver implements Screen, InputProcessor {
     public ScrGameOver(GamHamsters _gamHamsters) {
         batch = new SpriteBatch();
         txGameOver = new Texture("Game Over Screen.jpg");
-        sprButtonBack = new SprButton (0,0,50,100,"Back.png");
+        sprButtonBack = new SprButton((Gdx.graphics.getWidth() - 146) / 2, 50, 146, 53, "Back.jpg");
         gamHamsters = _gamHamsters;
 
     }

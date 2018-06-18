@@ -12,6 +12,8 @@ public class SprPlayableMartian extends Sprite {
     Texture txSheet;
     SpriteSheetAnimator spriteSheetAnimator;
     public Sprite sprTemp;
+    int[] DX = new int[]{0, 0, 2, 0, -2};
+    int[] DY = new int[]{0, -2, 0, 2, 0};
 
     public SprPlayableMartian(int nX, int nY, int nW, int nH) {
         super(new Texture(Gdx.files.internal("RedMartianAni.png")));
@@ -31,13 +33,24 @@ public class SprPlayableMartian extends Sprite {
     }
     public void reset() {
         nCurrentDir = 0;
-        nDx = 0;
-        nDy = 0;
         nPos = 2;
         setPosition(nOrigX, nOrigY);
     }
 
     public void animation(int nFrame) {
+        if (nCurrentDir == 1) {
+            nPos = 2;
+            bFlip = false;
+        } else if (nCurrentDir == 2) {
+            nPos = 1;
+            bFlip = false;
+        } else if (nCurrentDir == 3) {
+            nPos = 0;
+            bFlip = false;
+        } else if (nCurrentDir == 4) {
+            nPos = 1;
+            bFlip = true;
+        }
         sprTemp = (Sprite) arAnimation[nPos].getKeyFrame(nFrame, true);
 //        sprTemp = new Sprite(sprTemp);
         sprTemp.setFlip(false, true);
@@ -63,7 +76,7 @@ public class SprPlayableMartian extends Sprite {
         }
         float fX = getX() + nDx;
         float fY = getY() + nDy;
-        if (!map.bCheckHitWall(this, fX, fY, false)) {
+        if (!map.bPlayCheckWall(this, fX, fY, false)) {
             nCurrentDir = nNewDir;
         }
     }
@@ -72,31 +85,12 @@ public class SprPlayableMartian extends Sprite {
         if (nNewDir != nCurrentDir) {
             tryMove(nNewDir, map);
         }
-        bFlip = false;
-        if (nCurrentDir == 1) { // up
-            nDy = -2;
-            nDx = 0;
-            nPos = 2;
-        } else if (nCurrentDir == 2) { // right
-            nDx = 2;
-            nDy = 0;
-            nPos = 1;
-        } else if (nCurrentDir == 3) { // down
-            nDy = 2;
-            nDx = 0;
-            nPos = 0;
-        } else if (nCurrentDir == 4) { // left
-            nDx = -2;
-            nDy = 0;
-            nPos = 1;
-            bFlip = true;
-        }
-        setX(getX() + nDx);
-        setY(getY() + nDy);
+        setX(getX() + (float)DX[nCurrentDir]);
+        setY(getY() + (float)DY[nCurrentDir]);
     }
 
     public void outOfBounds() {
-        setX(getX() - nDx);
-        setY(getY() - nDy);
+        setX(getX() - (float)DX[nCurrentDir]);
+        setY(getY() - (float)DY[nCurrentDir]);
     }
 }

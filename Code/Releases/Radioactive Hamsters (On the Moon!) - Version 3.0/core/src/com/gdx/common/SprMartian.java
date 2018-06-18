@@ -7,13 +7,16 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 
 public class SprMartian extends Sprite {
 
-    int nDx, nDy, nCurrentDir, nPos, nOrigX, nOrigY;
+    int nDx, nDy, nCurrentDir, nPos, nOrigX, nOrigY, nOldMove;
     boolean bFirst = true;
     public Animation arAnimation[];
     Texture txSheet;
-    boolean bFlip;
+    boolean bFlip, bMove;
     SpriteSheetAnimator spriteSheetAnimator;
     public Sprite sprTemp;
+    int[] DX = new int[]{0, 2, 0, -2};
+    int[] DY = new int[]{-2, 0, 2, 0};
+    int[][] nSquaresCheck = new int[][]{{0, 1, 3}, {1, 0, 2}, {2, 1, 3}, {3, 0, 2}};
 
 
     public SprMartian(int nX, int nY, int nW, int nH) {
@@ -27,17 +30,30 @@ public class SprMartian extends Sprite {
         nOrigY = nY;
         nDx = 0;
         nDy = 0;
-        nCurrentDir = -1;
+        nCurrentDir = 0;
     }
 
-    public void movement(SprMap sprMap, int nFrame){
-        move();
-        sprMap.gHitWall(this);
+    public void movement(SprMap sprMap, int nFrame, float fX, float fY) {
+        move(sprMap, fX, fY);
+        sprMap.gHitWall(this, bFirst);
         sprMap.warpingEdge(this);
         animation(nFrame);
     }
 
     public void animation(int nFrame) {
+        if (nCurrentDir == 0) {
+            nPos = 2;
+            bFlip = false;
+        } else if (nCurrentDir == 1) {
+            nPos = 1;
+            bFlip = false;
+        } else if (nCurrentDir == 2) {
+            nPos = 0;
+            bFlip = false;
+        } else if (nCurrentDir == 3) {
+            nPos = 1;
+            bFlip = true;
+        }
         sprTemp = (Sprite) arAnimation[nPos].getKeyFrame(nFrame, true);
 //        sprTemp = new Sprite(sprTemp);
         sprTemp.setFlip(false, true);
@@ -48,73 +64,70 @@ public class SprMartian extends Sprite {
 
     public void reset() {
         setPosition(nOrigX, nOrigY);
-        nCurrentDir = -1;
-        bFirst = false;
+        nCurrentDir = 0;
+        bFirst = true;
     }
 
     public void pickNewDirection() {
         if (bFirst) {
             if (Math.random() < 0.5) {
-                nCurrentDir = 2;
+                nCurrentDir = 1;
             } else {
-                nCurrentDir = -2;
-
+                nCurrentDir = 3;
             }
             bFirst = false;
         } else {
-//        int nNewDir = nCurrentDir;
-//        while (nNewDir == Math.abs(nCurrentDir)) {
-//            nNewDir = (int) (Math.random() * 4 + 1);
-//        }
-            if (Math.abs(nCurrentDir) == 1) {
-                if (Math.random() < 0.5) {
-                    nCurrentDir = 2;
-                } else {
-                    nCurrentDir = -2;
-                }
-            } else if (Math.abs(nCurrentDir) == 2) {
-                if (Math.random() < 0.5) {
-                    nCurrentDir = 1;
-                } else {
-                    nCurrentDir = -1;
-                }
+            nOldMove = nCurrentDir;
+            while(nOldMove % 2 == nCurrentDir % 2) {
+                nCurrentDir = (int) (Math.random() * 4.0);
             }
         }
-//        if (nCurrentDir == 1) System.out.println("up");
-//        if (nCurrentDir == -1) System.out.println("down");
-//        if (nCurrentDir == 2) System.out.println("left");
-//        if (nCurrentDir == -2) System.out.println("right");
+
     }
 
-    public void move() {
-        if (nCurrentDir == -1) { // up
-            nDx = 0;
-            nDy = -2;
-            nPos = 2;
-            bFlip = false;
-        } else if (nCurrentDir == 1) { // down
-            nDx = 0;
-            nDy = 2;
-            nPos = 0;
-            bFlip = false;
-        } else if (nCurrentDir == 2) { // right
-            nDx = 2;
-            nDy = 0;
-            nPos = 1;
-            bFlip = false;
-        } else if (nCurrentDir == -2) { // left
-            nDx = -2;
-            nDy = 0;
-            nPos = 1;
-            bFlip = true;
+    public boolean tryMove(int nNewDir, SprMap map) {
+        float fX = getX() + DX[nNewDir];
+        float fY = getY() + DY[nNewDir];
+        if (!bFirst && !map.bPlayCheckWall(this, fX, fY, true) && (int) (Math.random() * 3.0) == 0) {
+            nCurrentDir = nNewDir;
+            return true;
         }
-        setX(getX() + nDx);
-        setY(getY() + nDy);
+        return false;
+    }
+
+    public void move(SprMap sprMap, float fX, float fY) {
+//        if (getX() <= fX + 100.0F && getX() + getWidth() > fX - 100.0F) {
+//            if (getY() <= fY + 100.0F && getY() + getHeight() > fY - 100.0F) {
+//                proximityCheck(fX, fY);
+//            }
+        for (int nI = 0; nI < 3; ++nI) {
+            bMove = tryMove(nSquaresCheck[nCurrentDir][nI], sprMap);
+            if (bMove) {
+                break;
+            }
+        }
+        setX(getX() + DX[nCurrentDir]);
+        setY(getY() + DY[nCurrentDir]);
+    }
+
+    public void proximityCheck(float fX, float fY) {
+        if (Math.random() < 0.5D) {
+            if (getX() > fX) {
+                nCurrentDir = 3;
+            } else if (getX() < fX) {
+                nCurrentDir = 1;
+            }
+        } else if (getY() > fY) {
+            nCurrentDir = 0;
+        } else if (getY() < fY) {
+            nCurrentDir = 2;
+        }
+
     }
 
     public void outOfBounds() {
-        setX(getX() - nDx);
-        setY(getY() - nDy);
+        setX(getX() - DX[nCurrentDir]);
+        setY(getY() - DY[nCurrentDir]);
         pickNewDirection();
     }
 }
