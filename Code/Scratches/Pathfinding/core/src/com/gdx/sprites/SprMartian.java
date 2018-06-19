@@ -91,11 +91,11 @@ public class SprMartian extends Sprite {
 
     public int PathfindingX(SprHamster sprHamster) {
         if (getX() < sprHamster.getX()) {
-                return 0;
+            return 0;
         } else if (getX() > sprHamster.getX()) {
             return 2;
         } else if (getX() == sprHamster.getX()) {
-           return PathfindingY(sprHamster);
+            return PathfindingY(sprHamster);
         }
         return -1;
     }

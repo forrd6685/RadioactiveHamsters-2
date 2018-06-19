@@ -119,7 +119,7 @@ public class ScrPlay implements Screen, InputProcessor {
 
     public void allMovement() {
         for (SprMartian sp : arSprMartians) {
-            sp.movement(sprMap, nMarFrame, sprHamster.getX(), sprHamster.getY());
+            sp.movement(sprMap, nMarFrame, sprHamster);
         }
         if (gamHamsters.bMultiplayer) {
             sprPMart.movement(nWantMoveMar, sprMap);

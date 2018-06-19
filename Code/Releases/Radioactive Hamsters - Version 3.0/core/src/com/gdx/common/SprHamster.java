@@ -10,6 +10,7 @@ public class SprHamster extends Sprite {
     int nCurrentDir, nPos, nGlow, nGlowTime, nOrigX, nOrigY, nStatus;
     public Animation arNormalAni[], arGlowingAni[], arDarkAni[];
     Animation[][] aAllAnimations;
+    public SprQuad HQuad;
     Texture txNormHam, txGlowHam, txDarkHam;
     SpriteSheetAnimator spriteSheetAnimator;
     boolean bRadioactive, bGlow;
@@ -51,6 +52,8 @@ public class SprHamster extends Sprite {
     }
 
     public void movement(int move, SprMap sprMap, int nFrame) {
+
+
         move(move, sprMap);
         sprMap.hHitWall(this);
         sprMap.warpingEdge(this);
@@ -102,6 +105,7 @@ public class SprHamster extends Sprite {
     public void tryMove(int nNewDir, SprMap map) {
         float fX = getX() + DX[nNewDir];
         float fY = getY() + DY[nNewDir];
+
         if (!map.bPlayCheckWall(this, fX, fY, true)) {
             nCurrentDir = nNewDir;
         }
@@ -109,6 +113,8 @@ public class SprHamster extends Sprite {
     }
 
     public void move(int nNewDir, SprMap map) {
+        HQuad = new SprQuad(getX(), getY());
+        System.out.println("Hamster: " + HQuad.nQuad);
         if (nNewDir != nCurrentDir) {
             tryMove(nNewDir, map);
         }

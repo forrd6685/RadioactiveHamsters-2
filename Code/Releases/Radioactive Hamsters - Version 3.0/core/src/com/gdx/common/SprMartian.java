@@ -14,8 +14,9 @@ public class SprMartian extends Sprite {
     boolean bFlip, bMove;
     SpriteSheetAnimator spriteSheetAnimator;
     public Sprite sprTemp;
-    int[] DX = new int[]{0, 2, 0, -2};
-    int[] DY = new int[]{-2, 0, 2, 0};
+    SprQuad MQuad;
+    int[] DX = new int[]{0, 2, 0, -2, 0};
+    int[] DY = new int[]{-2, 0, 2, 0, 0};
     int[][] nSquaresCheck = new int[][]{{0, 1, 3}, {1, 0, 2}, {2, 1, 3}, {3, 0, 2}};
 
 
@@ -33,8 +34,9 @@ public class SprMartian extends Sprite {
         nCurrentDir = 0;
     }
 
-    public void movement(SprMap sprMap, int nFrame, float fX, float fY) {
-        move(sprMap, fX, fY);
+    public void movement(SprMap sprMap, int nFrame, SprHamster sprHamster) {
+
+        move(sprMap, sprHamster);
         sprMap.gHitWall(this, bFirst);
         sprMap.warpingEdge(this);
         animation(nFrame);
@@ -78,7 +80,7 @@ public class SprMartian extends Sprite {
             bFirst = false;
         } else {
             nOldMove = nCurrentDir;
-            while(nOldMove % 2 == nCurrentDir % 2) {
+            while (nOldMove % 2 == nCurrentDir % 2) {
                 nCurrentDir = (int) (Math.random() * 4.0);
             }
         }
@@ -95,34 +97,24 @@ public class SprMartian extends Sprite {
         return false;
     }
 
-    public void move(SprMap sprMap, float fX, float fY) {
-//        if (getX() <= fX + 100.0F && getX() + getWidth() > fX - 100.0F) {
-//            if (getY() <= fY + 100.0F && getY() + getHeight() > fY - 100.0F) {
-//                proximityCheck(fX, fY);
-//            }
-        for (int nI = 0; nI < 3; ++nI) {
-            bMove = tryMove(nSquaresCheck[nCurrentDir][nI], sprMap);
-            if (bMove) {
-                break;
+    public void move(SprMap sprMap, SprHamster sprHamster) {
+        MQuad = new SprQuad(getX(), getY());
+        System.out.println("Martian: " + MQuad.nQuad);
+        if (!bFirst) {
+//            if ((sprHamster.HQuad.nQuad != MQuad.nQuad)) {
+//            //    PathfindingX(sprHamster, sprMap);
+//
+//            } else {
+                for (int nI = 0; nI < 3; ++nI) {
+                    bMove = tryMove(nSquaresCheck[nCurrentDir][nI], sprMap);
+                    if (bMove) {
+                        break;
+                    }
+
+                }
             }
-        }
         setX(getX() + DX[nCurrentDir]);
         setY(getY() + DY[nCurrentDir]);
-    }
-
-    public void proximityCheck(float fX, float fY) {
-        if (Math.random() < 0.5D) {
-            if (getX() > fX) {
-                nCurrentDir = 3;
-            } else if (getX() < fX) {
-                nCurrentDir = 1;
-            }
-        } else if (getY() > fY) {
-            nCurrentDir = 0;
-        } else if (getY() < fY) {
-            nCurrentDir = 2;
-        }
-
     }
 
     public void outOfBounds() {
@@ -130,4 +122,54 @@ public class SprMartian extends Sprite {
         setY(getY() - DY[nCurrentDir]);
         pickNewDirection();
     }
+
+//    public void PathfindingX(SprHamster sprHamster, SprMap sprMap) {
+//        if (getX() < sprHamster.getX()) {
+//            for (int nI = 0; nI < 3; ++nI) {
+//                bMove = tryMove(nSquaresCheck[1][nI], sprMap);
+//                if (bMove) {
+//                    nCurrentDir = 1;
+//                } else {
+//                    PathfindingY(sprHamster, sprMap);
+//                }
+//            }
+//        } else if (getX() > sprHamster.getX()) {
+//            for (int nI = 0; nI < 3; ++nI) {
+//                bMove = tryMove(nSquaresCheck[3][nI], sprMap);
+//                if (bMove) {
+//                    nCurrentDir = 3;
+//                } else {
+//                    PathfindingY(sprHamster, sprMap);
+//                }
+//            }
+//        } else if (getX() == sprHamster.getX()) {
+//            PathfindingY(sprHamster, sprMap);
+//        }
+//    }
+//
+//
+//    public void PathfindingY(SprHamster sprHamster, SprMap sprMap) {
+//        if (getY() < sprHamster.getY()) {
+//            for (int nI = 0; nI < 3; ++nI) {
+//                bMove = tryMove(nSquaresCheck[2][nI], sprMap);
+//                if (bMove) {
+//                    nCurrentDir = 2;
+//                } else {
+//                    PathfindingX(sprHamster, sprMap);
+//                }
+//            }
+//        } else if (getY() > sprHamster.getY()) {
+//            for (int nI = 0; nI < 3; ++nI) {
+//                bMove = tryMove(nSquaresCheck[0][nI], sprMap);
+//                if (bMove) {
+//                    nCurrentDir = 0;
+//                } else {
+//                    PathfindingX(sprHamster, sprMap);
+//                }
+//            }
+//        } else if (getY() == sprHamster.getY()a) {
+//            PathfindingX(sprHamster, sprMap);
+//
+//        }
+//    }
 }
